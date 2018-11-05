@@ -2,6 +2,11 @@ const url = require('url');
 const querystring = require('querystring')
 
 const NAME = 'maxime';
+const head = 
+    '<head>'+
+        '<meta charset="utf8"/>'+
+        '<title>TP1 : Hello</title>'+
+    '</head>';
 
 module.exports = {
     serverHandle: function (req, res) {
@@ -18,10 +23,7 @@ module.exports = {
             res.write(
                 '<!DOCTYPE html>'+
                 '<html>'+
-                    '<head>'+
-                        '<meta charset="utf8"/>'+
-                        '<title>TP1</title>'+
-                    '</head>'+
+                    head +
                     '<body>'+
                         '<h1>Fonctionnement</h1>'+
                         '<h2>/</h2> Affiche cette page.'+
@@ -41,10 +43,7 @@ module.exports = {
             res.write(
                 '<!DOCTYPE html>'+
                 '<html>'+
-                    '<head>'+
-                    '<meta charset="utf-8"/>'+
-                        '<title>TP1</title>'+
-                    '</head>'+
+                    head +
                     '<body>'+
                        (('name' in params && params['name'] === NAME) ?
                             ('<h1>Maxime Vernusset</h1>'+
@@ -52,8 +51,8 @@ module.exports = {
                                 '<h2>Parcours</h2>'+
                                 '&Eacute;tudiant en 5&egrave;me ann&eacute;e d\'&eacute;cole d\'ing&eacute;nieurs (<abbr title="&Eacute;cole Centrale d\'&eacute;l&eacute;ctronique">ECE Paris</abbr>) :'+
                                 '<ul>'+
-                                    '<li>Majeure : Cybers&eacute;curit&eacute;</li>'
-                                    +'<li><abbr title="Option d\'approfondissement">OA</abbr> : Internet Nouvelle G&eacute;n&eacute;ration</li>'+
+                                    '<li>Majeure : Cybers&eacute;curit&eacute;</li>'+
+                                    '<li><abbr title="Option d\'approfondissement">OA</abbr> : Internet Nouvelle G&eacute;n&eacute;ration</li>'+
                                 '</ul>'+
                             '</section>'+
                             '<section>'+
