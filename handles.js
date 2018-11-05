@@ -12,6 +12,7 @@ module.exports = {
         const params = querystring.parse(url.parse(req.url).query);
         console.log('Parameters: ' + JSON.stringify(params));
 
+        //Route / : explains how /hello works
         if(path === '/') {
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.write(
@@ -22,11 +23,19 @@ module.exports = {
                         '<title>TP1</title>'+
                     '</head>'+
                     '<body>'+
-                        
+                        '<h1>Fonctionnement</h1>'+
+                        '<h2>/</h2> Affiche cette page.'+
+                        '<h2>/hello</h2>'+
+                        '<ul>'+
+                            '<li>Pas de paramètre : affiche "Hello"</li>'+
+                            '<li><kbd>?name=...</kbd> : affiche "Hello ..."</li>'+
+                            '<li><kbd>?name=maxime</kbd> : affiche une pr&eacute;sentation de l\'auteur</li>'+
+                        '</ul>'+
                     '</body>'+
                 '</html>'
             );
         }
+        //Route /hello : says hello if parameter 'name' is not set, says hello [name] if parameter 'name' is set, displays a short introduction of me if parameter 'name' is set to 'maxime'
         else if(path === '/hello') {
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.write(
@@ -57,6 +66,7 @@ module.exports = {
                 '</html>'
             );
         }
+        //Any other routes : sends 404 error code
         else {
             res.writeHead(404, {'Content-Type': 'text/html'});
         }
