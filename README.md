@@ -9,6 +9,10 @@ A basic app with three routes:
 * any other replies a 404 code with a not found message
 
 ## Run instructions
+```
+node index.js
+```
+
 
 
 ## Author
