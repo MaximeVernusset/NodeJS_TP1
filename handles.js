@@ -27,9 +27,9 @@ module.exports = {
                         '<h2>/</h2> Affiche cette page.'+
                         '<h2>/hello</h2>'+
                         '<ul>'+
-                            '<li>Pas de paramètre : affiche "Hello"</li>'+
-                            '<li><kbd>?name=...</kbd> : affiche "Hello ..."</li>'+
-                            '<li><kbd>?name=maxime</kbd> : affiche une pr&eacute;sentation de l\'auteur</li>'+
+                            '<li><a href="/hello">Pas de paramètre</a> : affiche "Hello"</li>'+
+                            '<li><a href="/hello?name=test"><kbd>?name=...</kbd></a> : affiche "Hello ..."</li>'+
+                            '<li><a href="/hello?name=maxime"><kbd>?name=maxime</kbd></a> : affiche une pr&eacute;sentation de l\'auteur</li>'+
                         '</ul>'+
                     '</body>'+
                 '</html>'
