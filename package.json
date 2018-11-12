@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MaximeVernusset/NodeJS_TP.git"
+    "url": "git+https://github.com/MaximeVernusset/NodeJS_TP1.git"
   },
   "author": "Maxime Vernusset",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/MaximeVernusset/NodeJS_TP/issues"
+    "url": "https://github.com/MaximeVernusset/NodeJS_TP1/issues"
   },
-  "homepage": "https://github.com/MaximeVernusset/NodeJS_TP#readme",
+  "homepage": "https://github.com/MaximeVernusset/NodeJS_TP1#readme",
   "dependencies": {
     "ejs": "^2.6.1",
     "express": "^4.16.4"

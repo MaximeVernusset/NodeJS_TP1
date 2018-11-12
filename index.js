@@ -16,15 +16,15 @@ app.get('/', (req, res) => {
 
 //Route /hello : says hello
 app.get('/hello',  (req, res) => {
-    res.render('hello', {name: ''});
+    res.render('hello/hello', {name: ''});
 });
 
 //Route /hello/name : says hello name (if name='maxime' displays a short introduction of me)
 app.get('/hello/:name',  (req, res) => {
     if(req.params.name == app.get('authorName'))
-    res.render('maxime');
+    res.render('hello/maxime');
     else
-        res.render('hello', {name: req.params.name});
+        res.render('hello/hello', {name: req.params.name});
 });
 
 
