@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/MaximeVernusset/NodeJS_TP/issues"
   },
-  "homepage": "https://github.com/MaximeVernusset/NodeJS_TP#readme"
+  "homepage": "https://github.com/MaximeVernusset/NodeJS_TP#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }
