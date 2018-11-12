@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf8"/>
-        <title>TP2 : Hello with Express</title>
+        <% include partials/head %>
     </head>
-    <body>
+    <body class="container-fluid">
         <h1>Fonctionnement</h1>
         <h2>/</h2> Affiche cette page.
         <h2>/hello</h2>
         <ul>
             <li><a href="/hello"><kbd>/hello</kbd></a> : affiche "Hello"</li>
             <li><a href="/hello/test"><kbd>/hello/...</kbd></a> : affiche "Hello ..."</li>
-            <li><a href="/hello/maxime"><kbd>/hello/maxime</kbd></a> : affiche une pr&eacute;sentation de l\'auteur</li>
+            <li><a href="/hello/maxime"><kbd>/hello/maxime</kbd></a> : affiche une pr&eacute;sentation de l'auteur</li>
         </ul>
     </body>
 </html>

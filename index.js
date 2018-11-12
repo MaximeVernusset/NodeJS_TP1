@@ -1,6 +1,8 @@
-//Express
+//Modules
 const express = require('express');
 const app = express();
+const path = require('path');
+
 
 app.set('port', 8080);
 //Special name to display short introduction
@@ -8,6 +10,10 @@ app.set('authorName', 'maxime');
 //Templating views
 app.set('views', __dirname + "/views")
 app.set('view engine', 'ejs');
+
+//Expose static content from public folder
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 //Route / : explains how /hello works
 app.get('/', (req, res) => {
