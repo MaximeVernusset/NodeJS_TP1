@@ -2,10 +2,11 @@
 
 ## Introduction
 A basic app with three routes:
-* / explains how /hello works
-* /hello takes a name query parameter and 
-    - random names replies hello [name]
-    - 'maxime' name replies with a short intro of the author
+* ``/`` explains how /hello works
+* ``/hello``
+    - ``/hello`` replies hello
+    - ``/hello/[name]`` replies hello [name]
+    - ``/hello/maxime`` name replies with a short intro of the author
 * any other replies a 404 code with a not found message
 
 
