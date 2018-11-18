@@ -7,7 +7,7 @@ A basic app with three routes:
     - ``/hello`` replies hello
     - ``/hello/[name]`` replies hello [name]
     - ``/hello/maxime`` name replies with a short intro of the author
-* any other replies a 404 code with a not found message
+* any other route replies a 404 code with a not found message
 
 
 ## Run instructions

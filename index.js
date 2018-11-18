@@ -28,7 +28,7 @@ app.get('/hello',  (req, res) => {
 //Route /hello/name : says hello name (if name='maxime' displays a short introduction of me)
 app.get('/hello/:name',  (req, res) => {
     if(req.params.name == app.get('authorName'))
-    res.render('hello/maxime');
+        res.render('hello/maxime');
     else
         res.render('hello/hello', {name: req.params.name});
 });
