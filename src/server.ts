@@ -1,22 +1,42 @@
 import express = require('express');
-import { MetricsHandler } from './metrics';
+import { Metric, MetricsHandler } from './metrics';
+import bodyparser = require('body-parser');
 
 const app = express();
+const dbMet = new MetricsHandler('./db');
 const port: string = process.env.PORT || '8080';
+
+app.use(bodyparser.json())
+app.use(bodyparser.urlencoded())
 
 app.get('/', (req: any, res: any) => {
   res.write('Hello world');
   res.end();
 });
 
-app.get('/metrics', (req: any, res: any) => {
-  MetricsHandler.get((err: Error | null, result?: any) => {
+app.get('/metrics/:id', (req: any, res: any) => {
+  dbMet.get(req.params.id, (err: Error | null, result?: Metric[]) => {
     if (err)
       throw err;
 
-    res.json(result);
+    if (result === undefined) {
+      res.write('no result');
+      res.send();
+    } 
+    else res.json(result);
   });
 });
+
+app.post('/metrics/:id', (req: any, res: any) => {
+  dbMet.save(req.params.id, req.body, (err: Error | null) => {
+    if (err) {
+      res.status(500);
+      throw err;
+    }
+    res.status(200).send();
+  });
+});
+
 
 app.listen(port, (err: Error) => {
   if (err)
