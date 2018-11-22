@@ -25,6 +25,19 @@ app.get('/metrics/:id', (req: any, res: any) => {
   });
 });
 
+app.get('/metrics', (req: any, res: any) => {
+  dbMet.getAll((err: Error | null, result?: Metric[]) => {
+    if (err)
+      throw err;
+
+    if (result === undefined) {
+      res.write('no result');
+      res.send();
+    } 
+    else res.json(result);
+  });
+});
+
 app.post('/metrics/:id', (req: any, res: any) => {
   console.log(req.body);
   dbMet.save(req.params.id, req.body, (err: Error | null) => {
