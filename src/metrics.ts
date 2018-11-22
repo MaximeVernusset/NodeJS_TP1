@@ -68,4 +68,20 @@ export class MetricsHandler {
                 met.push(new Metric(timestamp, value));
         });
     }
+
+    /*Supprime les métriques associées à la clé donnée*/
+    public delete(key: string, callback: (err: Error | null) => void) {
+        const stream = this.db.createReadStream();
+    
+        stream.on('error', callback);
+        stream.on('end', (err: Error) => {
+            callback(null);
+        });
+        stream.on('data', (data: any) => {
+            const [, k, timestamp] = data.key.split(":");
+            const value = data.value;
+            if (key == k)
+                this.db.del(data.key);
+        });
+    }
 }

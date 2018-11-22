@@ -54,6 +54,18 @@ app.post('/metrics/:id', (req: any, res: any) => {
 });
 
 
+/*Supprime les métriques pour la clé correspondantes*/
+app.delete('/metrics/:id', (req: any, res: any) => {
+  dbMet.delete(req.params.id, (err: Error | null) => {
+    if (err) {
+      res.status(500);
+      throw err;
+    }
+    res.status(200).send();
+  });
+});
+
+
 app.listen(port, (err: Error) => {
   if (err)
     throw err;
