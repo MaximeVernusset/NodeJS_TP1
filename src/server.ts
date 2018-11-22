@@ -7,11 +7,13 @@ const port: string = process.env.PORT || '8080';
 
 app.use(express.json());
 
+
 app.get('/', (req: any, res: any) => {
   res.write('Hello world');
   res.end();
 });
 
+/*Hello world*/
 app.get('/metrics/:id', (req: any, res: any) => {
   dbMet.get(req.params.id, (err: Error | null, result?: Metric[]) => {
     if (err)
@@ -25,8 +27,9 @@ app.get('/metrics/:id', (req: any, res: any) => {
   });
 });
 
+/*Affiche toutes les métriques avec leur clé associée*/
 app.get('/metrics', (req: any, res: any) => {
-  dbMet.getAll((err: Error | null, result?: Metric[]) => {
+  dbMet.getAll((err: Error | null, result?: {}) => {
     if (err)
       throw err;
 
@@ -38,6 +41,7 @@ app.get('/metrics', (req: any, res: any) => {
   });
 });
 
+/*Affiche les métriques pour la clé correspondantes*/
 app.post('/metrics/:id', (req: any, res: any) => {
   console.log(req.body);
   dbMet.save(req.params.id, req.body, (err: Error | null) => {

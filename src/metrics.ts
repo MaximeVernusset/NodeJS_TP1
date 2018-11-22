@@ -18,6 +18,7 @@ export class MetricsHandler {
       this.db = LevelDb.open(dbPath);
     }
 
+    /*Enregistre des métriques dans la BDD*/
     public save(key: string, metrics: Metric[], callback: (error: Error | null) => void) {
         const stream = WriteStream(this.db);
 
@@ -31,21 +32,25 @@ export class MetricsHandler {
         stream.end();
     }
 
-    public getAll(callback: (err: Error | null, result?: Metric[]) => void) {
+    /*Récupère toutes les métriques*/
+    public getAll(callback: (err: Error | null, result?: {}) => void) {
         const stream = this.db.createReadStream();
-        var met: Metric[] = [];
+        var met = {};
     
         stream.on('error', callback);
         stream.on('end', (err: Error) => {
             callback(null, met);
         });
         stream.on('data', (data: any) => {
-            const [, , timestamp] = data.key.split(":");
+            const [, k, timestamp] = data.key.split(":");
             const value = data.value;
-            met.push(new Metric(timestamp, value));
+            if(met[k] === undefined)
+                met[k] = [];
+            met[k].push(new Metric(timestamp, value));
         });
     }
 
+    /*Récupère les métriques associées à la clé donnée*/
     public get(key: string, callback: (err: Error | null, result?: Metric[]) => void) {
         const stream = this.db.createReadStream();
         var met: Metric[] = [];
