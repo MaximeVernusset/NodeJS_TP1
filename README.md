@@ -1,19 +1,25 @@
-# NodeJS_TP1
+# AST NodeJS
 
 ## Introduction
-A basic app with three routes:
-* ``/`` explains how /hello works
-* ``/hello``
-    - ``/hello`` replies hello
-    - ``/hello/[name]`` replies hello [name]
-    - ``/hello/maxime`` name replies with a short intro of the author
-* any other route replies a 404 code with a not found message
+A user can retrieve his metrics.
+* ``GET`` :
+    - ``/`` displays 'Hello world'
+    - ``/metrics`` displays all metrics from database
+    - ``/metrics/{key}`` displays metrics associated to desired key
+* ``POST`` :
+    - ``/metrics/{key}`` save metrics to desired key
+* ``DELETE`` :
+    - ``/metrics/{key}`` delete metrics from desired key
 
 
 ## Run instructions
 In your terminal, browse to projet's directory, then run:
 ```
-node index.js
+npm start
+```
+or
+```
+npm run dev
 ```
 This done, open ``localhost:8080`` in your internet browser.
 
