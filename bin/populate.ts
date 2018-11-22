@@ -10,7 +10,7 @@ const met = [
 
 const db = new MetricsHandler('./db');
 
-db.save("0", met, (err: Error | null) => {
+db.save("2", met, (err: Error | null) => {
   if (err) throw err;
   console.log('Data populated');
 });

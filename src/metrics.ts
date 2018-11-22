@@ -15,7 +15,7 @@ export class MetricsHandler {
     private db: any 
 
     constructor(dbPath: string) {
-      this.db = LevelDb.open(dbPath)
+      this.db = LevelDb.open(dbPath);
     }
 
     public save(key: string, metrics: Metric[], callback: (error: Error | null) => void) {
@@ -25,7 +25,7 @@ export class MetricsHandler {
         stream.on('close', callback);
 
         metrics.forEach((m: Metric) => {
-          stream.write({ key: `metric:${key}${m.timestamp}`, value: m.value });
+            stream.write({ key: `metric:${key}:${m.timestamp}`, value: m.value });
         });
 
         stream.end();
@@ -43,8 +43,9 @@ export class MetricsHandler {
             const [, k, timestamp] = data.key.split(":");
             const value = data.value;
             if (key != k)
-              console.log(`Level DB error: ${data} does not match key ${key}`);
-            met.push(new Metric(timestamp, value));
+                console.log(`Level DB error: ${data} does not match key ${key}`);
+            else
+                met.push(new Metric(timestamp, value));
         });
     }
 }

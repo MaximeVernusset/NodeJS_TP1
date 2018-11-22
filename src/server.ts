@@ -1,13 +1,11 @@
 import express = require('express');
 import { Metric, MetricsHandler } from './metrics';
-import bodyparser = require('body-parser');
 
 const app = express();
 const dbMet = new MetricsHandler('./db');
 const port: string = process.env.PORT || '8080';
 
-app.use(bodyparser.json())
-app.use(bodyparser.urlencoded())
+app.use(express.json());
 
 app.get('/', (req: any, res: any) => {
   res.write('Hello world');
@@ -28,6 +26,7 @@ app.get('/metrics/:id', (req: any, res: any) => {
 });
 
 app.post('/metrics/:id', (req: any, res: any) => {
+  console.log(req.body);
   dbMet.save(req.params.id, req.body, (err: Error | null) => {
     if (err) {
       res.status(500);

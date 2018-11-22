@@ -21,7 +21,7 @@ class MetricsHandler {
         stream.on('error', callback);
         stream.on('close', callback);
         metrics.forEach((m) => {
-            stream.write({ key: `metric:${key}${m.timestamp}`, value: m.value });
+            stream.write({ key: `metric:${key}:${m.timestamp}`, value: m.value });
         });
         stream.end();
     }
@@ -37,7 +37,8 @@ class MetricsHandler {
             const value = data.value;
             if (key != k)
                 console.log(`Level DB error: ${data} does not match key ${key}`);
-            met.push(new Metric(timestamp, value));
+            else
+                met.push(new Metric(timestamp, value));
         });
     }
 }

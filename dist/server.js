@@ -2,12 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const metrics_1 = require("./metrics");
-const bodyparser = require("body-parser");
 const app = express();
 const dbMet = new metrics_1.MetricsHandler('./db');
 const port = process.env.PORT || '8080';
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded());
+app.use(express.json());
 app.get('/', (req, res) => {
     res.write('Hello world');
     res.end();
