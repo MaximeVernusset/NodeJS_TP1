@@ -1,7 +1,7 @@
 # AST NodeJS
 
 ## Introduction
-A user can retrieve his metrics.
+A user can retrieve, save and delete his metrics.
 * ``GET`` :
     - ``/`` displays 'Hello world'
     - ``/metrics`` displays all metrics from database
@@ -15,13 +15,15 @@ A user can retrieve his metrics.
 ## Run instructions
 In your terminal, browse to projet's directory, then run:
 ```
+npm install
 npm start
 ```
 or
 ```
+npm install
 npm run dev
 ```
-This done, open ``localhost:8080`` in your internet browser.
+This done, open ``localhost:8080`` in your internet browser and test routes.
 
 
 ## Author
