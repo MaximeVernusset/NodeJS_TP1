@@ -2,7 +2,7 @@ import express = require('express');
 import { Metric, MetricsHandler } from './metrics';
 
 const app = express();
-const dbMet = new MetricsHandler('./db');
+const dbMet = new MetricsHandler('./db/metrics');
 const port: string = process.env.PORT || '8080';
 
 app.use(express.json());
