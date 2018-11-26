@@ -16,6 +16,7 @@ class MetricsHandler {
     constructor(dbPath) {
         this.db = leveldb_1.LevelDb.open(dbPath);
     }
+    /*Enregistre des métriques dans la BDD*/
     save(key, metrics, callback) {
         const stream = level_ws_1.default(this.db);
         stream.on('error', callback);
@@ -25,19 +26,23 @@ class MetricsHandler {
         });
         stream.end();
     }
+    /*Récupère toutes les métriques*/
     getAll(callback) {
         const stream = this.db.createReadStream();
-        var met = [];
+        var met = {};
         stream.on('error', callback);
         stream.on('end', (err) => {
             callback(null, met);
         });
         stream.on('data', (data) => {
-            const [, , timestamp] = data.key.split(":");
+            const [, k, timestamp] = data.key.split(":");
             const value = data.value;
-            met.push(new Metric(timestamp, value));
+            if (met[k] === undefined)
+                met[k] = [];
+            met[k].push(new Metric(timestamp, value));
         });
     }
+    /*Récupère les métriques associées à la clé donnée*/
     get(key, callback) {
         const stream = this.db.createReadStream();
         var met = [];
@@ -52,6 +57,20 @@ class MetricsHandler {
                 console.log(`Level DB error: ${data} does not match key ${key}`);
             else
                 met.push(new Metric(timestamp, value));
+        });
+    }
+    /*Supprime les métriques associées à la clé donnée*/
+    delete(key, callback) {
+        const stream = this.db.createReadStream();
+        stream.on('error', callback);
+        stream.on('end', (err) => {
+            callback(null);
+        });
+        stream.on('data', (data) => {
+            const [, k, timestamp] = data.key.split(":");
+            const value = data.value;
+            if (key == k)
+                this.db.del(data.key);
         });
     }
 }
