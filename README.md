@@ -1,5 +1,7 @@
 # AST NodeJS
 
+[![Build Status](https://travis-ci.org/MaximeVernusset/NodeJS_TP1.svg?branch=master)](https://travis-ci.org/MaximeVernusset/NodeJS_TP1)
+
 ## Introduction
 A user can retrieve, save and delete his metrics.
 * ``GET`` :
