@@ -14,21 +14,32 @@ A user can retrieve, save and delete his metrics.
     - ``/metrics/{key}`` delete metrics from desired key
 
 
-## Run instructions
-In your terminal, browse to projet's directory, then run:
+## Setup 
 ```
-npm install
+npm install 
+```
+Pour peupler la base de données : `npm run populate`.
+
+## Run
+```
 npm start
 ```
-or
+
+## Dev
+Sources dans `src`.
 ```
-npm install
 npm run dev
 ```
-This done, open ``localhost:8080`` in your internet browser and test routes.
+
+## Test
+Test unitaires : [Mocha](https://mochajs.org/) et [Chai](https://www.chaijs.com/).
+Fichiers de test en `.test.ts`.
+```
+npm test
+```
 
 
 ## Author
-Maxime Vernusset
+[Maxime Vernusset](https://github.com/MaximeVernusset)
 
 
