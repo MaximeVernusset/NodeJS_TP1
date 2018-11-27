@@ -28,7 +28,7 @@ describe('Metrics', function () {
 
   describe('#save', function () {
     it('should save data', function () {
-      //TODO
+      //TODO : écrire et relire données
     });
     it('should update data', function () {
       //TODO
@@ -37,7 +37,7 @@ describe('Metrics', function () {
 
   describe('#delete', function () {
     it('should delete data', function () {
-      //TODO
+      //TODO 
     });
     it('should not fail if data does not exist', function () {
       //TODO
