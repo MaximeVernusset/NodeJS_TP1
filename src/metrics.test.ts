@@ -12,7 +12,7 @@ describe('Metrics', function () {
   });
 
   after(function () {
-    dbMet.db.close();
+    //dbMet.db.close();
   });
 
 
