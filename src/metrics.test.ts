@@ -61,7 +61,7 @@ describe('Metrics', function () {
           expect(result).to.not.be.undefined;
           expect(result).to.not.be.empty;
           expect(result).to.be.an('array');
-          expect(result).to.equal(newTestMet);
+          expect(result).to.equal('newTestMet');
           console.log(result);
         });
       });
