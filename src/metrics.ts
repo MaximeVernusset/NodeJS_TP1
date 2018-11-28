@@ -79,7 +79,6 @@ export class MetricsHandler {
         });
         stream.on('data', (data: any) => {
             const [, k, timestamp] = data.key.split(":");
-            const value = data.value;
             if (key == k)
                 this.db.del(data.key);
         });
