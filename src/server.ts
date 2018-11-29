@@ -63,16 +63,6 @@ authRouter.get('/signup', function (req: any, res: any) {
   res.render('signup');
 })
 
-authRouter.post('/signup', function (req: any, res: any, next: any) {
-  const newUser = new User(req.body.username, req.body.email, req.body.password);
-  dbUser.save(newUser, function (err: Error | null) {
-    if(err) next(err);
-    req.session.loggedIn = true;
-    req.session.user = newUser;
-    res.redirect('/');
-  });
-});
-
 authRouter.get('/logout', function (req: any, res: any) {
   if (req.session.loggedIn) {
     delete req.session.loggedIn;
@@ -119,14 +109,14 @@ userRouter.get('/:username', function (req: any, res: any, next: any) {
 userRouter.post('/', function (req: any, res: any, next: any) {
   dbUser.get(req.body.username, function (err: Error | null, result?: User) {
     if (!err || result !== undefined) {
-      res.status(409).send(`User ${req.params.username} already exists`);
+      res.status(409).send(`User ${req.body.username} already exists`);
     }
     else {
       dbUser.save(req.body, function (err: Error | null) {
         if (err) 
           next(err);
         else 
-          res.status(201).send(`User ${req.params.username} persisted`);
+          res.status(201).send(`User ${req.body.username} persisted`);
       });
     }
   });

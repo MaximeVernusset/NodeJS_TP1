@@ -1,5 +1,6 @@
 import { LevelDb } from "./leveldb";
 //import WriteStream from 'level-ws';
+const bcrypt = require('bcrypt');
 
 export class User {
     public username: string;
@@ -22,8 +23,8 @@ export class User {
     }
     
     public setPassword(toSet: string): void {
-      // Hash and set password
-      this.password = toSet;
+      const saltRounds = 10;
+      this.password = bcrypt.hashSync(toSet, saltRounds);
     }
 
     public getPassword(): string {
@@ -54,7 +55,7 @@ export class UserHandler {
   }
 
   public save(user: User, callback: (err: Error | null) => void) {
-    this.db.put(`user:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {
+    this.db.put(`user:${user.username}`, `${user.getPassword}:${user.email}`, (err: Error | null) => {
       callback(err);
     });
   }
