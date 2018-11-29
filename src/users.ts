@@ -54,15 +54,15 @@ export class UserHandler {
   }
 
   public save(user: User, callback: (err: Error | null) => void) {
-    this.db.put(`user:${user.username}`, `${user.getPassword}:${user.email}`, (err: Error | null) => {
+    this.db.put(`user:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {
       callback(err);
     });
   }
 
   public delete(user, callback: (err: Error | null) => void) {
-    this.db.put(`user:${user.username}`, `${user.getPassword}:${user.email}`, (err: Error | null) => {
-        callback(err);
-        //TODO
+    //TODO
+    this.db.delete(`user:${user.username}`, (err: Error | null) => {
+      callback(err);
     });
   }
 }

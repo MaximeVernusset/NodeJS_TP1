@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { User, UserHandler } from './user';
+import { User, UserHandler } from './users';
 import { LevelDb } from "./leveldb";
 
 const dbPath: string = 'db_test/users';

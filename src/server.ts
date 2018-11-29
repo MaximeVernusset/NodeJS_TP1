@@ -7,7 +7,7 @@ import levelSession = require('level-session-store');
 const LevelStore = levelSession(session);
 
 import { MetricsHandler, Metric } from './metrics';
-import { UserHandler, User } from './user';
+import { UserHandler, User } from './users';
 
 const app = express();
 const port: string = process.env.PORT || '8080';
@@ -62,6 +62,16 @@ authRouter.post('/login', function (req: any, res: any, next: any) {
 authRouter.get('/signup', function (req: any, res: any) {
   res.render('signup');
 })
+
+authRouter.post('/signup', function (req: any, res: any, next: any) {
+  const newUser = new User(req.body.username, req.body.email, req.body.password);
+  dbUser.save(newUser, function (err: Error | null) {
+    if(err) next(err);
+    req.session.loggedIn = true;
+    req.session.user = newUser;
+    res.redirect('/');
+  });
+});
 
 authRouter.get('/logout', function (req: any, res: any) {
   if (req.session.loggedIn) {

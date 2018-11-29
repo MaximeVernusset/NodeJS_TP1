@@ -3,7 +3,7 @@ import morgan = require('morgan');
 import session = require('express-session');
 import levelSession = require('level-session-store');
 import { Metric, MetricsHandler } from './metrics';
-import { UserHandler, User } from './user';
+import { UserHandler, User } from './users';
 
 const app = express();
 const dbMet = new MetricsHandler('./db/metrics');
