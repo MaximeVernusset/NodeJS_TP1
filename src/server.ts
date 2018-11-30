@@ -141,6 +141,15 @@ userRouter.delete('/:username', function (req: any, res: any, next: any) {
 
 app.use('/user', userRouter);
 
+app.get('/users', function (req: any, res: any) {
+  dbUser.getAll(function(err, result) {
+    if (err || result === undefined)
+      res.status(404).send(`No user found`);
+    else 
+      res.status(200).json(result);
+  });
+});
+
 
 /*
   Metrics

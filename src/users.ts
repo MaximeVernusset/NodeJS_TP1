@@ -52,6 +52,20 @@ export class UserHandler {
     });
   }
 
+  public getAll(callback: (err: Error | null, result?: {}) => void) {
+    const stream = this.db.createReadStream();
+    var users: User[] = [];
+
+    stream.on('error', callback);
+    stream.on('end', (err: Error) => {
+        callback(null, users);
+    });
+    stream.on('data', (data: any) => {
+        const [, username] = data.key.split(':');
+        users.push(User.fromDb(username, data.value));
+    });
+}
+
   public save(user: User, callback: (err: Error | null) => void) {
     this.db.put(`user:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {
       if(err)  
