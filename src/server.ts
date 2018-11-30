@@ -108,11 +108,12 @@ userRouter.get('/:username', function (req: any, res: any, next: any) {
 
 userRouter.post('/', function (req: any, res: any, next: any) {
   dbUser.get(req.body.username, function (err: Error | null, result?: User) {
-    if (!err || result !== undefined) {
+    if (!err && result !== undefined) {
       res.status(409).send(`User ${req.body.username} already exists`);
     }
     else {
-      dbUser.save(req.body, function (err: Error | null) {
+      const newUser = new User(req.body.username, req.body.email, req.body.password);
+      dbUser.save(newUser, function (err: Error | null) {
         if (err) 
           next(err);
         else 

@@ -1,43 +1,40 @@
 import { LevelDb } from "./leveldb";
-//import WriteStream from 'level-ws';
 const bcrypt = require('bcrypt');
 
+const saltRounds = 10;
+
 export class User {
-    public username: string;
-    public email: string;
-    private password: string = "";
-  
-    constructor(username: string, email: string, password: string, passwordHashed: boolean = false) {
-      this.username = username;
-      this.email = email;
-  
-      if (!passwordHashed)
-        this.setPassword(password);
-      else
-        this.password = password;
-    }
+  public username: string;
+  public email: string;
+  private password: string = "";
 
-    static fromDb(username: string, value: any): User {
-        const [password, email] = value.split(':');
-        return new User(username, email, password);
-    }
-    
-    public setPassword(toSet: string): void {
-      const saltRounds = 10;
-      this.password = bcrypt.hashSync(toSet, saltRounds);
-    }
+  constructor(username: string, email: string, password: string, passwordHashed: boolean = false) {
+    this.username = username;
+    this.email = email;
 
-    public getPassword(): string {
-        return this.password;
-    }
+    if (!passwordHashed)
+      this.setPassword(password);
+    else 
+      this.password = password;
+  }
 
-    public validatePassword(toValidate: String): boolean {
-      //return comparison with hashed password
-      return this.password === toValidate;
-    }
+  public setPassword(toSet: string): void {
+    this.password = bcrypt.hashSync(toSet, saltRounds);
+  }
+
+  public getPassword(): string {
+    return this.password;
+  }
+
+  public validatePassword(toValidate: String): boolean {
+    return bcrypt.compareSync(toValidate, this.password);
+  }
+
+  static fromDb(username: string, value: any): User {
+    const [password, email] = value.split(":");
+    return new User(username, email, password, true);
+  }
 }
-
-
 
 export class UserHandler {
   public db: any;
@@ -48,20 +45,19 @@ export class UserHandler {
 
   public get(username: string, callback: (err: Error | null, result?: User) => void) {
     this.db.get(`user:${username}`, function (err: Error, data: any) {
-      if (err) callback(err);
+      if (err) callback(null, undefined);
       else if (data === undefined) callback(null, data);
       else callback(null, User.fromDb(username, data));
-    })
+    });
   }
 
   public save(user: User, callback: (err: Error | null) => void) {
-    this.db.put(`user:${user.username}`, `${user.getPassword}:${user.email}`, (err: Error | null) => {
-      callback(err);
+    this.db.put(`user:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {
+        callback(err);
     });
   }
 
   public delete(user, callback: (err: Error | null) => void) {
-    //TODO
     this.db.delete(`user:${user.username}`, (err: Error | null) => {
       callback(err);
     });
