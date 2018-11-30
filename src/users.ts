@@ -58,7 +58,7 @@ export class UserHandler {
   }
 
   public delete(user, callback: (err: Error | null) => void) {
-    this.db.delete(`user:${user.username}`, (err: Error | null) => {
+    this.db.del(`user:${user.username}`, (err: Error | null) => {
       callback(err);
     });
   }

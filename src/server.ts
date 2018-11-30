@@ -124,11 +124,11 @@ userRouter.post('/', function (req: any, res: any, next: any) {
 });
 
 userRouter.delete('/:username', function (req: any, res: any, next: any) {
-  dbUser.get(req.params.username, function (err: Error | null) {
+  dbUser.delete(req.params.username, function (err: Error | null) {
     if (err)
       next(err);
     else
-      res.status(200).send();
+      res.status(200).send(`User ${req.params.username} deleted`);
   });
 });
 
