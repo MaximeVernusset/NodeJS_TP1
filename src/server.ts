@@ -141,10 +141,11 @@ userRouter.delete('/:username', function (req: any, res: any, next: any) {
 
 app.use('/user', userRouter);
 
-app.get('/users', function (req: any, res: any) {
+//Récupérer tous les utilisateurs
+app.get('/users', function (req: any, res: any, next: any) {
   dbUser.getAll(function(err, result) {
-    if (err || result === undefined)
-      res.status(404).send(`No user found`);
+    if (err) 
+      next(err);
     else 
       res.status(200).json(result);
   });
@@ -163,7 +164,18 @@ metricsRouter.use(function (req: any, res: any, next: any) {
 });
 
 metricsRouter.get('/:id', (req: any, res: any, next: any) => {
-  dbMet.get(req.params.id, (err: Error | null, result?: Metric[]) => {
+  dbMet.get(req.session.user.userRouter, req.params.id, (err: Error | null, result?: Metric[]) => {
+    if (err) next(err);
+    if (result === undefined) {
+      res.write('no result');
+      res.send();
+    }
+    else res.json(result);
+  });
+});
+
+metricsRouter.get('/', (req: any, res: any, next: any) => {
+  dbMet.getAll(req.session.user.userRouter, (err: Error | null, result?: {}) => {
     if (err) next(err);
     if (result === undefined) {
       res.write('no result');
@@ -174,20 +186,21 @@ metricsRouter.get('/:id', (req: any, res: any, next: any) => {
 });
 
 metricsRouter.post('/:id', (req: any, res: any, next: any) => {
-  dbMet.save(req.params.id, req.body, (err: Error | null) => {
+  dbMet.save(req.session.user.userRouter, req.params.id, req.body, (err: Error | null) => {
     if (err) next(err);
     res.status(200).send();
   });
 });
 
 metricsRouter.delete('/:id', (req: any, res: any, next: any) => {
-  dbMet.delete(req.params.id, (err: Error | null) => {
+  dbMet.delete(req.session.user.userRouter, req.params.id, (err: Error | null) => {
     if (err) next(err);
     res.status(200).send();
   });
 });
 
 app.use('/metrics', authMiddleware, metricsRouter);
+
 
 /*
   Error handling

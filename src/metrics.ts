@@ -19,21 +19,21 @@ export class MetricsHandler {
     }
 
     /*Enregistre des métriques dans la BDD*/
-    public save(key: string, metrics: Metric[], callback: (error: Error | null) => void) {
+    public save(username: string, key: string, metrics: Metric[], callback: (error: Error | null) => void) {
         const stream = WriteStream(this.db);
 
         stream.on('error', callback);
         stream.on('close', callback);
 
         metrics.forEach((m: Metric) => {
-            stream.write({ key: `metric:${key}:${m.timestamp}`, value: m.value });
+            stream.write({ key: `metric:${username}:${key}:${m.timestamp}`, value: m.value });
         });
 
         stream.end();
     }
 
     /*Récupère toutes les métriques*/
-    public getAll(callback: (err: Error | null, result?: {}) => void) {
+    public getAll(username: string, callback: (err: Error | null, result?: {}) => void) {
         const stream = this.db.createReadStream();
         var met = {};
     
@@ -42,16 +42,18 @@ export class MetricsHandler {
             callback(null, met);
         });
         stream.on('data', (data: any) => {
-            const [, k, timestamp] = data.key.split(":");
+            const [, usrnme, k, timestamp] = data.key.split(":");
             const value = data.value;
-            if(met[k] === undefined)
-                met[k] = [];
-            met[k].push(new Metric(timestamp, value));
+            if(usrnme === username) {
+                if(met[k] === undefined)
+                    met[k] = [];
+                met[k].push(new Metric(timestamp, value));
+            }
         });
     }
 
     /*Récupère les métriques associées à la clé donnée*/
-    public get(key: string, callback: (err: Error | null, result?: Metric[]) => void) {
+    public get(username: string, key: string, callback: (err: Error | null, result?: Metric[]) => void) {
         const stream = this.db.createReadStream();
         var met: Metric[] = [];
     
@@ -60,17 +62,15 @@ export class MetricsHandler {
             callback(null, met);
         });
         stream.on('data', (data: any) => {
-            const [, k, timestamp] = data.key.split(":");
+            const [, usrnme, k, timestamp] = data.key.split(":");
             const value = data.value;
-            if (key != k)
-                console.log(`Level DB error: ${data} does not match key ${key}`);
-            else
+            if(usrnme === username && k === key)
                 met.push(new Metric(timestamp, value));
         });
     }
 
     /*Supprime les métriques associées à la clé donnée*/
-    public delete(key: string, callback: (err: Error | null) => void) {
+    public delete(username: string, key: string, callback: (err: Error | null) => void) {
         const stream = this.db.createReadStream();
     
         stream.on('error', callback);
@@ -78,8 +78,8 @@ export class MetricsHandler {
             callback(null);
         });
         stream.on('data', (data: any) => {
-            const [, k, timestamp] = data.key.split(":");
-            if (key == k)
+            const [, usrnme, k, timestamp] = data.key.split(":");
+            if (usrnme === username && k === key)
                 this.db.del(data.key);
         });
     }
