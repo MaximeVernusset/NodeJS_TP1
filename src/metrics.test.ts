@@ -21,8 +21,8 @@ describe('Metrics', function () {
       dbMet.get("0", function (err: Error | null, result?: Metric[]) {
         expect(err).to.be.null;
         expect(result).to.not.be.undefined;
-        //expect(result).to.be.empty;
         expect(result).to.be.an('array');
+        expect(result).to.be.empty;
       });
     });
   });
@@ -30,19 +30,22 @@ describe('Metrics', function () {
   describe('#save', function () {
     it('should save data', function () {
       //Métrique de test
-      const testMet = [new Metric(`${new Date('2013-11-04 14:30 UTC').getTime()}`, 8)];
+      const testMet = [
+        new Metric(`${new Date('2013-11-04 14:30 UTC').getTime()}`, 8),
+        new Metric(`${new Date('2013-11-04 15:00 UTC').getTime()}`, 9)
+      ];
       
       //Ecrit la métrique test
       dbMet.save("0", testMet, (err: Error | null) => {
-        //expect(err).to.be.undefined;
+        expect(err).to.be.undefined;
         
         //Lit la métrique insérée
         dbMet.get("0", function (err: Error | null, result?: Metric[]) {
           expect(err).to.be.null;
           expect(result).to.not.be.undefined;
-          expect(result).to.not.be.empty;
           expect(result).to.be.an('array');
-          expect(result).to.equal(testMet);
+          expect(result).to.not.be.empty;
+          expect(result).to.deep.equal(testMet);
         });
       });
     });
@@ -53,7 +56,7 @@ describe('Metrics', function () {
 
       //Ecrit la métrique test
       dbMet.save("0", newTestMet, (err: Error | null) => {
-        //expect(err).to.be.undefined;
+        expect(err).to.be.undefined;
         
         //Lit la métrique insérée
         dbMet.get("0", function (err: Error | null, result?: Metric[]) {
@@ -61,14 +64,14 @@ describe('Metrics', function () {
           expect(result).to.not.be.undefined;
           expect(result).to.not.be.empty;
           expect(result).to.be.an('array');
-          expect(result).to.equal(newTestMet);
+          expect(result).to.deep.equal(newTestMet);
         });
       });
     });
   });
 
 
-  describe('#delete', function () {
+  /*describe('#delete', function () {
     it('should delete data', function () {
       dbMet.delete("0", (err: Error | null) => {
         expect(err).to.be.null;
@@ -88,5 +91,5 @@ describe('Metrics', function () {
         expect(err).to.be.null;
       });
     });
-  });
+  });*/
 });
