@@ -53,13 +53,19 @@ export class UserHandler {
 
   public save(user: User, callback: (err: Error | null) => void) {
     this.db.put(`user:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {
+      if(err)  
         callback(err);
+      else
+      callback(null);      
     });
   }
 
   public delete(user, callback: (err: Error | null) => void) {
     this.db.del(`user:${user.username}`, (err: Error | null) => {
-      callback(err);
+      if(err)  
+        callback(err);
+      else
+      callback(null); 
     });
   }
 }
