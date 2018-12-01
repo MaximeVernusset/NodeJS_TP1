@@ -116,8 +116,11 @@ userRouter.post('/', function (req: any, res: any, next: any) {
       dbUser.save(newUser, function (err: Error | null) {
         if (err) 
           next(err);
-        else 
+        else {
+          req.session.loggedIn = true;
+          req.session.user = newUser;
           res.status(201).send(`User ${req.body.username} persisted`);
+        }
       });
     }
   });
@@ -164,7 +167,7 @@ metricsRouter.use(function (req: any, res: any, next: any) {
 });
 
 metricsRouter.get('/:id', (req: any, res: any, next: any) => {
-  dbMet.get(req.session.user.userRouter, req.params.id, (err: Error | null, result?: Metric[]) => {
+  dbMet.get(req.session.user.username, req.params.id, (err: Error | null, result?: Metric[]) => {
     if (err) next(err);
     if (result === undefined) {
       res.write('no result');
@@ -175,7 +178,7 @@ metricsRouter.get('/:id', (req: any, res: any, next: any) => {
 });
 
 metricsRouter.get('/', (req: any, res: any, next: any) => {
-  dbMet.getAll(req.session.user.userRouter, (err: Error | null, result?: {}) => {
+  dbMet.getAll(req.session.user.username, (err: Error | null, result?: {}) => {
     if (err) next(err);
     if (result === undefined) {
       res.write('no result');
