@@ -7,33 +7,43 @@
 
 <body class="container">
   <div class="col-md-6.col-md-offset-3">
-    <h1>Hello
-      <%= name %>
-    </h1>
-    <button class="btn btn-success" id="show-metrics">
-      Bring the metrics
-    </button>
-    <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>
-      Logout
-    </button>
+    <h1>Hello <%= name %></h1>
+    <form>
+      <input type="text" id="metric-key" placeholder="Key"/>
+      <button type="validate" class="btn btn-success" id="show-metrics">Show metrics</button>
+    </form>
     <div id="metrics"></div>
+    <hr/>
+    <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>Logout</button>
   </div>
 </body>
 
 <script>
   $('#show-metrics').click((e) => {
     e.preventDefault();
-    $.getJSON('/metrics', {}, (data) => {
-      $("#metrics").append(JSON.stringify(data));
+    const key = $('#metric-key').val();
+    if(key === '') {
+      $.getJSON('/metrics', {}, (data) => {
+        let html = '';
+        for(let k in data) {
+          const content = data[k].map(d => {
+            return `<p>key: ${k}, timestamp: ${d.timestamp}, value: ${d.value}</p>`;
+          });
+          html += content.join("\n");
+        }
+        $("#metrics").html(html);
       });
-    });
-    /*$.getJSON('/metrics', {}, (data) => {
-      const content = data.map(d => {
-        return `<p>timestamp: ${d.timestamp}, value: ${d.value}</p>`;
-      })
-      $("#metrics").append(content.join("\n"));
-    });
-  });*/
+    }
+    else {
+      $.getJSON(`/metrics/${key}`, {}, (data) => {
+        const content = data.map(d => {
+          return `<p>timestamp: ${d.timestamp}, value: ${d.value}</p>`;
+        });
+        $("#metrics").html(content.join("\n"));
+      });
+    }
+  });
+    
 </script>
 
 </html>
