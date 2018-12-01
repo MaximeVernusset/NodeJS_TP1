@@ -22,14 +22,18 @@
 
 <script>
   $('#show-metrics').click((e) => {
-    e.preventDefault()
-    $.getJSON('/metrics.json', {}, (data) => {
+    e.preventDefault();
+    $.getJSON('/metrics', {}, (data) => {
+      $("#metrics").append(JSON.stringify(data));
+      });
+    });
+    /*$.getJSON('/metrics', {}, (data) => {
       const content = data.map(d => {
-        return `<p>timestamp: ${d.timestamp}, value: ${d.value}</p>`
+        return `<p>timestamp: ${d.timestamp}, value: ${d.value}</p>`;
       })
-      $("#metrics").append(content.join("\n"))
-    })
-  })
+      $("#metrics").append(content.join("\n"));
+    });
+  });*/
 </script>
 
 </html>

@@ -87,7 +87,7 @@ const authMiddleware = function (req: any, res: any, next: any) {
 */
 
 app.get('/', authMiddleware, (req: any, res: any) => {
-  res.render('index', { name: req.session.username });
+  res.render('index', { name: req.session.user.username });
 })
 
 
