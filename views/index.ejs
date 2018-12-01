@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <title>Index</title>
   <% include partials/head %>
 </head>
 
@@ -10,10 +11,11 @@
     <h1>Hello <%= name %></h1>
     <form>
       <input type="text" id="metric-key" placeholder="Key"/>
-      <button type="validate" class="btn btn-success" id="show-metrics">Show metrics</button>
+      <button type="submit" class="btn btn-success" id="show-metrics">Show metrics</button>
     </form>
     <div id="metrics"></div>
     <hr/>
+    <button class="btn btn-default" href="/newMetric" onClick='document.location.href="/newMetric"'>Add a new metric</button>
     <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>Logout</button>
   </div>
 </body>
