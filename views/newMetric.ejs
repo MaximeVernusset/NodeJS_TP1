@@ -5,23 +5,35 @@
         <% include ./partials/head %>
     </head>
     <body class="container">
-        <div id="form">
-            <p><strong>Create a new metric</strong></p>
+        <section id="form">
+            <h1>Create a new metric</h1>
             <hr/>
             <div>
                 <div class="form-group">
-                    <label for="form_key">Key</label>
-                    <input id="form_key" type="text" />
+                    <input id="form_key" placeholder="Key" type="text" />
                 </div>
                 <div class="form-group">
-                    <label for="form_value">Value</label>
-                    <input id="form_value" type="number" />
+                    <input id="form_value" placeholder="value" type="number" />
                 </div>
                 <button id="submit" type="submit" class="btn btn-primary btn-block">Submit</button>
-                <div id="saved-metric"></div>
             </div>
-        </div>
+        </section>
+        <hr/>
+        <section id="saved-metric"></section>
+        <section>
+            <button class="btn btn-default" href="/" onClick='document.location.href="/"'>Retrieve metrics</button>
+            <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>Logout</button>
+        </section>
     </body>
+
+    <script>
+        var input = document.getElementById("form_value");
+        input.addEventListener("keyup", function(e) {
+            e.preventDefault();
+            if (e.keyCode === 13)
+                document.getElementById("submit").click();
+        });
+    </script>
 
     <script>
         $("#submit").click((e) => {
@@ -33,12 +45,12 @@
                     'type': 'POST',
                     'contentType': 'application/json',
                     'success' : function() {
-                        $("#saved-metric").html('<div class="alert alert-success" role="alert">Metric saved</div>');
+                        $("#saved-metric").html('<div class="alert alert-success alert-dismissible" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Metric saved</div>');
                     }
                 });
             }
             else {
-                $("#saved-metric").html('<div class="alert alert-danger" role="alert">Please fill all fields</div>');
+                $("#saved-metric").html('<div class="alert alert-danger alert-dismissible" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Please fill all fields</div>');
             }
         });
     </script>

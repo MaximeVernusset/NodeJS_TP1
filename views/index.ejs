@@ -1,51 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+  <html lang="en">
 
-<head>
+  <head>
     <title>Index</title>
-  <% include partials/head %>
-</head>
+    <% include partials/head %>
+  </head>
 
-<body class="container">
-  <div class="col-md-6.col-md-offset-3">
-    <h1>Hello <%= name %></h1>
-    <form>
-      <input type="text" id="metric-key" placeholder="Key"/>
-      <button type="submit" class="btn btn-success" id="show-metrics">Show metrics</button>
-    </form>
-    <div id="metrics"></div>
-    <hr/>
-    <button class="btn btn-default" href="/newMetric" onClick='document.location.href="/newMetric"'>Add a new metric</button>
-    <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>Logout</button>
-  </div>
-</body>
+  <body class="container">
+    <div class="col-md-6.col-md-offset-3">
+      <section>
+        <h1>Hello <%= name %></h1>
+        <p><em>Retreive your metrics by key, or all your metrics whithout specifing their key.</em></p>
+        <form>
+          <div class="form-group">
+            <input type="text" id="metric-key" placeholder="Key"/>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-success" id="show-metrics">Show metrics</button>
+          </div>
+        </form>
+      </section>
+      <section id="metrics"></section>
+      <hr/>
+      <section>
+        <button class="btn btn-default" href="/newMetric" onClick='document.location.href="/newMetric"'>Add a new metric</button>
+        <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>Logout</button>
+      </section>
+    </div>
+  </body>
 
-<script>
-  $('#show-metrics').click((e) => {
-    e.preventDefault();
-    const key = $('#metric-key').val();
-    if(key === '') {
-      $.getJSON('/metrics', {}, (data) => {
-        let html = '';
-        for(let k in data) {
-          const content = data[k].map(d => {
-            return `<p>key: ${k}, timestamp: ${d.timestamp}, value: ${d.value}</p>`;
-          });
-          html += content.join("\n");
-        }
-        $("#metrics").html(html);
-      });
-    }
-    else {
-      $.getJSON(`/metrics/${key}`, {}, (data) => {
-        const content = data.map(d => {
-          return `<p>timestamp: ${d.timestamp}, value: ${d.value}</p>`;
+  <script>
+    $('#show-metrics').click((e) => {
+      e.preventDefault();
+      const key = $('#metric-key').val();
+      if(key === '') {
+        $.getJSON('/metrics', {}, (data) => {
+          let html = '';
+          for(let k in data) {
+            const content = data[k].map(d => {
+              return `<p>key: ${k}, timestamp: ${d.timestamp}, value: ${d.value}</p>`;
+            });
+            html += content.join("");
+          }
+            $("#metrics").html(html!=='' ? html : "No metric found");
+
         });
-        $("#metrics").html(content.join("\n"));
-      });
-    }
-  });
-    
-</script>
+      }
+      else {
+        $.getJSON(`/metrics/${key}`, {}, (data) => {
+          const content = data.map(d => {
+            return `<p>timestamp: ${d.timestamp}, value: ${d.value}</p>`;
+          });
+          let html = content.join("")
+          $("#metrics").html(html!=='' ? html : `No metric found with key=${key}`);
+        });
+      }
+    });
+      
+  </script>
 
 </html>

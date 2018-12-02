@@ -24,7 +24,7 @@ export class MetricsHandler {
 
         stream.on('error', callback);
         stream.on('close', callback);
-
+        
         metrics.forEach((m: Metric) => {
             stream.write({ key: `metric:${username}:${key}:${m.timestamp}`, value: m.value });
         });
