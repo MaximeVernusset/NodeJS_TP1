@@ -17,17 +17,17 @@ class MetricsHandler {
         this.db = leveldb_1.LevelDb.open(dbPath);
     }
     /*Enregistre des métriques dans la BDD*/
-    save(key, metrics, callback) {
+    save(username, key, metrics, callback) {
         const stream = level_ws_1.default(this.db);
         stream.on('error', callback);
         stream.on('close', callback);
         metrics.forEach((m) => {
-            stream.write({ key: `metric:${key}:${m.timestamp}`, value: m.value });
+            stream.write({ key: `metric:${username}:${key}:${m.timestamp}`, value: m.value });
         });
         stream.end();
     }
     /*Récupère toutes les métriques*/
-    getAll(callback) {
+    getAll(username, callback) {
         const stream = this.db.createReadStream();
         var met = {};
         stream.on('error', callback);
@@ -35,15 +35,17 @@ class MetricsHandler {
             callback(null, met);
         });
         stream.on('data', (data) => {
-            const [, k, timestamp] = data.key.split(":");
+            const [, usrnme, k, timestamp] = data.key.split(":");
             const value = data.value;
-            if (met[k] === undefined)
-                met[k] = [];
-            met[k].push(new Metric(timestamp, value));
+            if (usrnme === username) {
+                if (met[k] === undefined)
+                    met[k] = [];
+                met[k].push(new Metric(timestamp, value));
+            }
         });
     }
     /*Récupère les métriques associées à la clé donnée*/
-    get(key, callback) {
+    get(username, key, callback) {
         const stream = this.db.createReadStream();
         var met = [];
         stream.on('error', callback);
@@ -51,24 +53,22 @@ class MetricsHandler {
             callback(null, met);
         });
         stream.on('data', (data) => {
-            const [, k, timestamp] = data.key.split(":");
+            const [, usrnme, k, timestamp] = data.key.split(":");
             const value = data.value;
-            if (key != k)
-                console.log(`Level DB error: ${data} does not match key ${key}`);
-            else
+            if (usrnme === username && k === key)
                 met.push(new Metric(timestamp, value));
         });
     }
     /*Supprime les métriques associées à la clé donnée*/
-    delete(key, callback) {
+    delete(username, key, callback) {
         const stream = this.db.createReadStream();
         stream.on('error', callback);
         stream.on('end', (err) => {
             callback(null);
         });
         stream.on('data', (data) => {
-            const [, k, timestamp] = data.key.split(":");
-            if (key == k)
+            const [, usrnme, k, timestamp] = data.key.split(":");
+            if (usrnme === username && k === key)
                 this.db.del(data.key);
         });
     }
