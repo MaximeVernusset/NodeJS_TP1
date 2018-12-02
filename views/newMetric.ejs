@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>New metric</title>
+        <% include ./partials/head %>
+    </head>
+    <body class="container">
+        <div id="form">
+            <p><strong>Create a new metric</strong></p>
+            <hr/>
+            <div>
+                <div class="form-group">
+                    <label for="form_key">Key</label>
+                    <input id="form_key" type="text" />
+                </div>
+                <div class="form-group">
+                    <label for="form_value">Value</label>
+                    <input id="form_value" type="number" />
+                </div>
+                <button id="submit" type="submit" class="btn btn-primary btn-block">Submit</button>
+                <div id="saved-metric"></div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        $("#submit").click((e) => {
+            const key = $("#form_key").val();
+            const value = $("#form_value").val();
+            if(key !== '' && value !== '')  {
+                $.ajax(`metrics/${key}`, {
+                    'data': JSON.stringify([{ "timestamp": Date.now(), "value": value }]),
+                    'type': 'POST',
+                    'contentType': 'application/json',
+                    'success' : function() {
+                        $("#saved-metric").html('<div class="alert alert-success" role="alert">Metric saved</div>');
+                    }
+                });
+            }
+            else {
+                $("#saved-metric").html('<div class="alert alert-danger" role="alert">Please fill all fields</div>');
+            }
+        });
+    </script>
+
+</html>

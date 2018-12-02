@@ -189,17 +189,21 @@ metricsRouter.get('/', (req: any, res: any, next: any) => {
 });
 
 metricsRouter.post('/:id', (req: any, res: any, next: any) => {
-  dbMet.save(req.session.user.userRouter, req.params.id, req.body, (err: Error | null) => {
+  dbMet.save(req.session.user.username, req.params.id, req.body, (err: Error | null) => {
     if (err) next(err);
     res.status(200).send();
   });
 });
 
 metricsRouter.delete('/:id', (req: any, res: any, next: any) => {
-  dbMet.delete(req.session.user.userRouter, req.params.id, (err: Error | null) => {
+  dbMet.delete(req.session.user.username, req.params.id, (err: Error | null) => {
     if (err) next(err);
     res.status(200).send();
   });
+});
+
+app.get('/newMetric', (req: any, res: any, next: any) => {
+  res.render('newMetric');
 });
 
 app.use('/metrics', authMiddleware, metricsRouter);
