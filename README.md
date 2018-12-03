@@ -55,4 +55,5 @@ npm test
 ## Author
 [Maxime Vernusset](https://github.com/MaximeVernusset)
 
-
+## Licence
+UNLICENSED
