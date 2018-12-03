@@ -39,7 +39,7 @@ describe('Metrics', function () {
       
       //Ecrit la métrique test
       dbMet.save(username, key, testMet, (err: Error | null) => {
-        //expect(err).to.be.undefined;
+        expect(err).to.be.undefined;
         
         //Lit la métrique insérée
         dbMet.get(username, key, (err: Error | null, result?: Metric[]) => {
@@ -58,7 +58,7 @@ describe('Metrics', function () {
 
       //Ecrit la métrique test
       dbMet.save(username, key, newTestMet, (err: Error | null) => {
-        //expect(err).to.be.undefined;
+        expect(err).to.be.undefined;
         
         //Lit la métrique insérée
         dbMet.get(username, key, (err: Error | null, result?: Metric[]) => {
@@ -73,7 +73,7 @@ describe('Metrics', function () {
   });
 
 
-  /*describe('#delete', function () {
+  describe('#delete', function () {
     it('should delete data', function () {
       dbMet.delete(username, key, (err: Error | null) => {
         expect(err).to.be.null;
@@ -93,5 +93,5 @@ describe('Metrics', function () {
         expect(err).to.be.null;
       });
     });
-  });*/
+  });
 });
