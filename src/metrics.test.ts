@@ -5,7 +5,6 @@ import { LevelDb } from "./leveldb";
 const dbPath: string = 'db_test/metrics';
 var dbMet: MetricsHandler;
 const username: string = "test";
-const key: string = "0";
 
 describe('Metrics', function () {
   before(function () {
@@ -20,7 +19,7 @@ describe('Metrics', function () {
 
   describe('#get', function () {
     it('should get empty array on non existing group', function () {
-      dbMet.get(username, key, (err: Error | null, result?: Metric[]) => {
+      dbMet.get(username, '0', (err: Error | null, result?: Metric[]) => {
         expect(err).to.be.null;
         expect(result).to.not.be.undefined;
         expect(result).to.be.an('array');
@@ -33,16 +32,16 @@ describe('Metrics', function () {
     it('should save data', function () {
       //Métrique de test
       const testMet = [
-        new Metric(`${new Date('2013-11-04 14:30 UTC').getTime()}`, 8),
-        new Metric(`${new Date('2013-11-04 15:00 UTC').getTime()}`, 9)
+        new Metric(`${new Date('2013-11-04 14:30 UTC').getTime()}`, 1),
+        new Metric(`${new Date('2013-11-04 15:00 UTC').getTime()}`, 2)
       ];
       
       //Ecrit la métrique test
-      dbMet.save(username, key, testMet, (err: Error | null) => {
+      dbMet.save(username, '1', testMet, (err: Error | null) => {
         expect(err).to.be.undefined;
         
         //Lit la métrique insérée
-        dbMet.get(username, key, (err: Error | null, result?: Metric[]) => {
+        dbMet.get(username, '1', (err: Error | null, result?: Metric[]) => {
           expect(err).to.be.null;
           expect(result).to.not.be.undefined;
           expect(result).to.be.an('array');
@@ -54,14 +53,17 @@ describe('Metrics', function () {
 
     it('should update data', function () {
       //Métrique de test
-      const newTestMet = [new Metric(`${new Date('2013-11-04 14:30 UTC').getTime()}`, 99)];
+      const newTestMet = [
+        new Metric(`${new Date('2013-11-04 14:30 UTC').getTime()}`, 11),
+        new Metric(`${new Date('2013-11-04 15:00 UTC').getTime()}`, 22)
+      ];
 
       //Ecrit la métrique test
-      dbMet.save(username, key, newTestMet, (err: Error | null) => {
+      dbMet.save(username, '1', newTestMet, (err: Error | null) => {
         expect(err).to.be.undefined;
         
         //Lit la métrique insérée
-        dbMet.get(username, key, (err: Error | null, result?: Metric[]) => {
+        dbMet.get(username, '1', (err: Error | null, result?: Metric[]) => {
           expect(err).to.be.null;
           expect(result).to.not.be.undefined;
           expect(result).to.not.be.empty;
@@ -74,12 +76,20 @@ describe('Metrics', function () {
 
 
   describe('#delete', function () {
+    const testMet = [
+      new Metric(`${new Date('2013-11-05 15:30 UTC').getTime()}`, 0),
+      new Metric(`${new Date('2013-11-05 16:00 UTC').getTime()}`, 1)
+    ];
+
+    before(function () {
+      dbMet.save(username, '3', testMet, (error: Error | null) => {});
+    });
+
     it('should delete data', function () {
-      dbMet.delete(username, key, (err: Error | null) => {
+      dbMet.delete(username, '3', (err: Error | null) => {
         expect(err).to.be.null;
         
-        //Lit la métrique insérée
-        dbMet.get(username, key, (err: Error | null, result?: Metric[]) => {
+        dbMet.get(username, '3', (err: Error | null, result?: Metric[]) => {
           expect(err).to.be.null;
           expect(result).to.not.be.undefined;
           expect(result).to.be.empty;
@@ -89,7 +99,7 @@ describe('Metrics', function () {
     });
 
     it('should not fail if data does not exist', function () {
-      dbMet.delete(username, key, (err: Error | null) => {
+      dbMet.delete(username, '4', (err: Error | null) => {
         expect(err).to.be.null;
       });
     });
