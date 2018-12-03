@@ -76,5 +76,5 @@ typings/
 .fusebox/
 
 db/*
-!*/.gitkeep
 db_test/*
+!*/.gitkeep
