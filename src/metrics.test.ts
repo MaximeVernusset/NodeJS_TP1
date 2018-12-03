@@ -18,18 +18,19 @@ describe('Metrics', function () {
 
 
   describe('#get', function () {
-    it('should get empty array on non existing group', function () {
+    it('should get empty array on non existing group', function (done) {
       dbMet.get(username, '0', (err: Error | null, result?: Metric[]) => {
         expect(err).to.be.null;
         expect(result).to.not.be.undefined;
         expect(result).to.be.an('array');
         expect(result).to.be.empty;
+        done();
       });
     });
   });
 
   describe('#save', function () {
-    it('should save data', function () {
+    it('should save data', function (done) {
       //Métrique de test
       const testMet = [
         new Metric(`${new Date('2013-11-04 14:30 UTC').getTime()}`, 1),
@@ -47,11 +48,12 @@ describe('Metrics', function () {
           expect(result).to.be.an('array');
           expect(result).to.not.be.empty;
           expect(result).to.deep.equal(testMet);
+          done();
         });
       });
     });
 
-    it('should update data', function () {
+    it('should update data', function (done) {
       //Métrique de test
       const newTestMet = [
         new Metric(`${new Date('2013-11-04 14:30 UTC').getTime()}`, 11),
@@ -69,6 +71,7 @@ describe('Metrics', function () {
           expect(result).to.not.be.empty;
           expect(result).to.be.an('array');
           expect(result).to.deep.equal(newTestMet);
+          done();
         });
       });
     });
@@ -85,7 +88,7 @@ describe('Metrics', function () {
       dbMet.save(username, '3', testMet, (error: Error | null) => {});
     });
 
-    it('should delete data', function () {
+    it('should delete data', function (done) {
       dbMet.delete(username, '3', (err: Error | null) => {
         expect(err).to.be.null;
         
@@ -94,13 +97,15 @@ describe('Metrics', function () {
           expect(result).to.not.be.undefined;
           expect(result).to.be.empty;
           expect(result).to.be.an('array');
+          done();
         });
       });
     });
 
-    it('should not fail if data does not exist', function () {
+    it('should not fail if data does not exist', function (done) {
       dbMet.delete(username, '4', (err: Error | null) => {
         expect(err).to.be.null;
+        done();
       });
     });
   });
