@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/MaximeVernusset/NodeJS_TP1.svg?branch=master)](https://travis-ci.org/MaximeVernusset/NodeJS_TP1)
 
+Node version: `8.11.2`
+
 
 ## Setup 
 ```
