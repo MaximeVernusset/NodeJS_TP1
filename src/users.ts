@@ -1,12 +1,10 @@
-import { LevelDb } from "./leveldb";
 const bcrypt = require('bcrypt');
-
-const saltRounds = 10;
 
 export class User {
   public username: string;
   public email: string;
   private password: string = "";
+  private saltRounds: number = 10;
 
   constructor(username: string, email: string, password: string, passwordHashed: boolean = false) {
     this.username = username;
@@ -19,7 +17,7 @@ export class User {
   }
 
   public setPassword(toSet: string): void {
-    this.password = bcrypt.hashSync(toSet, saltRounds);
+    this.password = bcrypt.hashSync(toSet, this.saltRounds);
   }
 
   public getPassword(): string {
@@ -38,13 +36,14 @@ export class User {
 
 export class UserHandler {
   public db: any;
+  private keyPrefix: string = 'user';
 
-  constructor(path: string) {
-    this.db = LevelDb.open(path);
+  constructor(db: any) {
+    this.db = db;
   }
 
   public get(username: string, callback: (err: Error | null, result?: User) => void) {
-    this.db.get(`user:${username}`, function (err: Error, data: any) {
+    this.db.get(`${this.keyPrefix}:${username}`, function (err: Error, data: any) {
       if (err || data === undefined)
         callback(null, undefined);
       else
@@ -61,13 +60,15 @@ export class UserHandler {
         callback(null, users);
     });
     stream.on('data', (data: any) => {
+      if(data.key.substring(0, this.keyPrefix.length) === this.keyPrefix) {
         const [, username] = data.key.split(':');
         users.push(User.fromDb(username, data.value));
+      }
     });
 }
 
   public save(user: User, callback: (err: Error | null) => void) {
-    this.db.put(`user:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {
+    this.db.put(`${this.keyPrefix}:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {
       if(err)  
         callback(err);
       else
@@ -76,7 +77,7 @@ export class UserHandler {
   }
 
   public delete(username: string, callback: (err: Error | null) => void) {
-    this.db.del(`user:${username}`);
+    this.db.del(`${this.keyPrefix}:${username}`);
     callback(null);
   }
 }

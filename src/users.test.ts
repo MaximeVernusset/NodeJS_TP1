@@ -2,13 +2,12 @@ import { expect } from 'chai';
 import { User, UserHandler } from './users';
 import { LevelDb } from "./leveldb";
 
-const dbPath: string = 'db_test/users';
+const dbPath: string = 'db_test/users&metrics';
 var dbUser: UserHandler;
 
 describe('Users', function () {
   before(function () {
-    LevelDb.clear(dbPath);
-    dbUser = new UserHandler(dbPath);
+    dbUser = new UserHandler(LevelDb.open(dbPath));
   });
 
   after(function () {

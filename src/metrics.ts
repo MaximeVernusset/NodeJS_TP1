@@ -1,4 +1,3 @@
-import { LevelDb } from './leveldb';
 import WriteStream from 'level-ws';
 
 export class Metric {
@@ -13,9 +12,10 @@ export class Metric {
   
 export class MetricsHandler {
     public db: any;
+    private keyPrefix: string = 'metric';
 
-    constructor(dbPath: string) {
-      this.db = LevelDb.open(dbPath);
+    constructor(db: any) {
+      this.db = db;
     }
 
     /*Enregistre des métriques dans la BDD*/
@@ -26,7 +26,7 @@ export class MetricsHandler {
         stream.on('close', callback);
         
         metrics.forEach((m: Metric) => {
-            stream.write({ key: `metric:${username}:${key}:${m.timestamp}`, value: m.value });
+            stream.write({ key: `${this.keyPrefix}:${username}:${key}:${m.timestamp}`, value: m.value });
         });
 
         stream.end();
@@ -42,12 +42,14 @@ export class MetricsHandler {
             callback(null, met);
         });
         stream.on('data', (data: any) => {
-            const [, usrnme, k, timestamp] = data.key.split(":");
-            const value = data.value;
-            if(usrnme === username) {
-                if(met[k] === undefined)
-                    met[k] = [];
-                met[k].push(new Metric(timestamp, value));
+            if(data.key.substring(0, this.keyPrefix.length) === this.keyPrefix) {
+                const [, usrnme, k, timestamp] = data.key.split(":");
+                const value = data.value;
+                if(usrnme === username) {
+                    if(met[k] === undefined)
+                        met[k] = [];
+                    met[k].push(new Metric(timestamp, value));
+                }
             }
         });
     }
@@ -62,10 +64,12 @@ export class MetricsHandler {
             callback(null, met);
         });
         stream.on('data', (data: any) => {
-            const [, usrnme, k, timestamp] = data.key.split(":");
-            const value = data.value;
-            if(usrnme === username && k === key)
-                met.push(new Metric(timestamp, value));
+            if(data.key.substring(0, this.keyPrefix.length) === this.keyPrefix) {
+                const [, usrnme, k, timestamp] = data.key.split(":");
+                const value = data.value;
+                if(usrnme === username && k === key)
+                    met.push(new Metric(timestamp, value));
+            }
         });
     }
 

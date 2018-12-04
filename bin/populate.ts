@@ -2,6 +2,7 @@
 
 import { Metric, MetricsHandler } from '../src/metrics';
 import { User, UserHandler } from '../src/users';
+import { LevelDb } from '../src/leveldb';
 
 
 const user1: User = new User('user1', 'user@name1', 'user1');
@@ -35,8 +36,9 @@ const user2Met2: Metric[] = [
   new Metric(`${new Date('2013-11-06 15:30 UTC').getTime()}`, 9)
 ];
 
-const dbUser: UserHandler = new UserHandler('./db/users');
-const dbMet: MetricsHandler = new MetricsHandler('./db/metrics');
+const db: LevelDb = LevelDb.open('./db/users&metrics');
+const dbUser: UserHandler = new UserHandler(db);
+const dbMet: MetricsHandler = new MetricsHandler(db);
 
 dbUser.save(user1, (err: Error | null) => {
   if (err) throw err;

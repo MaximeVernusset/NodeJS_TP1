@@ -2,14 +2,14 @@ import { expect } from 'chai';
 import { Metric, MetricsHandler } from './metrics';
 import { LevelDb } from "./leveldb";
 
-const dbPath: string = 'db_test/metrics';
+const dbPath: string = 'db_test/users&metrics';
 var dbMet: MetricsHandler;
 const username: string = "test";
 
 describe('Metrics', function () {
   before(function () {
     LevelDb.clear(dbPath);
-    dbMet = new MetricsHandler(dbPath);
+    dbMet = new MetricsHandler(LevelDb.open(dbPath));
   });
 
   after(function () {

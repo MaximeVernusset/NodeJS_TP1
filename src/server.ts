@@ -8,12 +8,14 @@ const LevelStore = levelSession(session);
 
 import { MetricsHandler, Metric } from './metrics';
 import { UserHandler, User } from './users';
+import { LevelDb } from './leveldb';
 
 const app = express();
 const port: string = process.env.PORT || '8080';
 
-const dbMet: MetricsHandler = new MetricsHandler('./db/metrics');
-const dbUser: UserHandler = new UserHandler('./db/users');
+const db: LevelDb = LevelDb.open('./db/users&metrics');
+const dbMet: MetricsHandler = new MetricsHandler(db);
+const dbUser: UserHandler = new UserHandler(db);
 
 app.use(express.json());
 app.use(express.urlencoded());
