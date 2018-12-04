@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const leveldb_1 = require("./leveldb");
 const level_ws_1 = __importDefault(require("level-ws"));
 class Metric {
     constructor(ts, v) {
@@ -13,8 +12,9 @@ class Metric {
 }
 exports.Metric = Metric;
 class MetricsHandler {
-    constructor(dbPath) {
-        this.db = leveldb_1.LevelDb.open(dbPath);
+    constructor(db) {
+        this.keyPrefix = 'metric';
+        this.db = db;
     }
     /*Enregistre des métriques dans la BDD*/
     save(username, key, metrics, callback) {
@@ -22,7 +22,7 @@ class MetricsHandler {
         stream.on('error', callback);
         stream.on('close', callback);
         metrics.forEach((m) => {
-            stream.write({ key: `metric:${username}:${key}:${m.timestamp}`, value: m.value });
+            stream.write({ key: `${this.keyPrefix}:${username}:${key}:${m.timestamp}`, value: m.value });
         });
         stream.end();
     }
@@ -35,12 +35,14 @@ class MetricsHandler {
             callback(null, met);
         });
         stream.on('data', (data) => {
-            const [, usrnme, k, timestamp] = data.key.split(":");
-            const value = data.value;
-            if (usrnme === username) {
-                if (met[k] === undefined)
-                    met[k] = [];
-                met[k].push(new Metric(timestamp, value));
+            if (data.key.substring(0, this.keyPrefix.length) === this.keyPrefix) {
+                const [, usrnme, k, timestamp] = data.key.split(":");
+                const value = data.value;
+                if (usrnme === username) {
+                    if (met[k] === undefined)
+                        met[k] = [];
+                    met[k].push(new Metric(timestamp, value));
+                }
             }
         });
     }
@@ -53,10 +55,12 @@ class MetricsHandler {
             callback(null, met);
         });
         stream.on('data', (data) => {
-            const [, usrnme, k, timestamp] = data.key.split(":");
-            const value = data.value;
-            if (usrnme === username && k === key)
-                met.push(new Metric(timestamp, value));
+            if (data.key.substring(0, this.keyPrefix.length) === this.keyPrefix) {
+                const [, usrnme, k, timestamp] = data.key.split(":");
+                const value = data.value;
+                if (usrnme === username && k === key)
+                    met.push(new Metric(timestamp, value));
+            }
         });
     }
     /*Supprime les métriques associées à la clé donnée*/

@@ -8,10 +8,12 @@ const levelSession = require("level-session-store");
 const LevelStore = levelSession(session);
 const metrics_1 = require("./metrics");
 const users_1 = require("./users");
+const leveldb_1 = require("./leveldb");
 const app = express();
 const port = process.env.PORT || '8080';
-const dbMet = new metrics_1.MetricsHandler('./db/metrics');
-const dbUser = new users_1.UserHandler('./db/users');
+const db = leveldb_1.LevelDb.open('./db/users&metrics');
+const dbMet = new metrics_1.MetricsHandler(db);
+const dbUser = new users_1.UserHandler(db);
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(morgan('dev'));
@@ -32,17 +34,21 @@ app.use('/', express.static(path.join(__dirname, '/../node_modules/bootstrap/dis
   Authentification
 */
 const authRouter = express.Router();
+var wrongCredentials = false;
 authRouter.get('/login', function (req, res) {
-    res.render('login');
+    res.render('login', { message: wrongCredentials ? 'Username or password is not valid' : '' });
+    wrongCredentials = false;
 });
 authRouter.post('/login', function (req, res, next) {
     dbUser.get(req.body.username, function (err, result) {
         if (err)
             next(err);
         if (result === undefined || !result.validatePassword(req.body.password)) {
+            wrongCredentials = true;
             res.redirect('/login');
         }
         else {
+            wrongCredentials = false;
             req.session.loggedIn = true;
             req.session.user = result;
             res.redirect('/');
