@@ -18,6 +18,9 @@
                 <button class="btn btn-primary btn-block" type="submit" value="Submit">Connect</button>
             </form>
             <hr/>
+            <%if (message.length > 0) { %>
+                <div class="alert alert-warning" role="alert"><%= message %></div>
+            <% } %>
             <button class="btn btn-success btn-block" type="submit" href="/signup" onClick='document.location.href="/signup"'>Create an account</button>
         </section>
     </body>

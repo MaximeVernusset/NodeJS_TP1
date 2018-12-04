@@ -40,18 +40,22 @@ app.use('/', express.static(path.join(__dirname, '/../node_modules/bootstrap/dis
 */
 
 const authRouter = express.Router();
+var wrongCredentials: boolean = false;
 
 authRouter.get('/login', function (req: any, res: any) {
-  res.render('login');
+  res.render('login', {message: wrongCredentials?'Username or password is not valid':''});
+  wrongCredentials = false;
 })
 
 authRouter.post('/login', function (req: any, res: any, next: any) {
   dbUser.get(req.body.username, function (err: Error | null, result?: User) {
     if (err) next(err);
     if (result === undefined || !result.validatePassword(req.body.password)) {
+      wrongCredentials = true;
       res.redirect('/login');
     }
     else {
+      wrongCredentials = false;
       req.session.loggedIn = true;
       req.session.user = result;
       res.redirect('/');
