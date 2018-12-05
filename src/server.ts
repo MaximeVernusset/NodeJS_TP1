@@ -49,8 +49,13 @@ const authRouter = express.Router();
 var wrongCredentials: boolean = false;
 
 authRouter.get('/login', function (req: any, res: any) {
-  res.render('login', {message: wrongCredentials?'Username or password is not valid':''});
-  wrongCredentials = false;
+  if(req.session.loggedIn) {
+    res.redirect('/');
+  }
+  else {
+    res.render('login', {message: wrongCredentials?'Username or password is not valid':''});
+    wrongCredentials = false;
+  }
 })
 
 authRouter.post('/login', function (req: any, res: any, next: any) {
