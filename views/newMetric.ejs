@@ -31,7 +31,7 @@
             var input = document.getElementById("form_value");
             input.addEventListener("keyup", function(e) {
                 e.preventDefault();
-                if (e.keyCode === 13)
+                if (e.keyCode === 13) //Enter keycode
                     document.getElementById("submit").click();
             });
         </script>
@@ -39,7 +39,7 @@
         <script>
             $("#submit").click((e) => {
                 const key = $("#form_key").val();
-                const value = $("#form_value").val();
+                const value = parseInt($("#form_value").val());
                 if(key !== '' && value !== '')  {
                     $.ajax(`metrics/${key}`, {
                         'data': JSON.stringify([{ "timestamp": Date.now(), "value": value }]),
