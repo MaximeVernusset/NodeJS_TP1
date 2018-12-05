@@ -1,10 +1,11 @@
 const bcrypt = require('bcrypt');
 
+const saltRounds: number = 10;
+
 export class User {
   public username: string;
   public email: string;
   private password: string = "";
-  private saltRounds: number = 10;
 
   constructor(username: string, email: string, password: string, passwordHashed: boolean = false) {
     this.username = username;
@@ -17,7 +18,7 @@ export class User {
   }
 
   public setPassword(toSet: string): void {
-    this.password = bcrypt.hashSync(toSet, this.saltRounds);
+    this.password = bcrypt.hashSync(toSet, saltRounds);
   }
 
   public getPassword(): string {
