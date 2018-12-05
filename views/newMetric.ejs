@@ -4,6 +4,7 @@
         <title>New metric</title>
         <% include ./partials/head %>
     </head>
+    
     <body class="container">
         <section id="form">
             <h1>Create a new metric</h1>
@@ -24,35 +25,36 @@
             <button class="btn btn-default" href="/" onClick='document.location.href="/"'>Retrieve metrics</button>
             <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>Logout</button>
         </section>
+
+
+        <script>
+            var input = document.getElementById("form_value");
+            input.addEventListener("keyup", function(e) {
+                e.preventDefault();
+                if (e.keyCode === 13)
+                    document.getElementById("submit").click();
+            });
+        </script>
+    
+        <script>
+            $("#submit").click((e) => {
+                const key = $("#form_key").val();
+                const value = $("#form_value").val();
+                if(key !== '' && value !== '')  {
+                    $.ajax(`metrics/${key}`, {
+                        'data': JSON.stringify([{ "timestamp": Date.now(), "value": value }]),
+                        'type': 'POST',
+                        'contentType': 'application/json',
+                        'success' : function() {
+                            $("#saved-metric").html('<div class="alert alert-success alert-dismissible" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Metric saved</div>');
+                        }
+                    });
+                }
+                else {
+                    $("#saved-metric").html('<div class="alert alert-danger alert-dismissible" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Please fill all fields</div>');
+                }
+            });
+        </script>
+
     </body>
-
-    <script>
-        var input = document.getElementById("form_value");
-        input.addEventListener("keyup", function(e) {
-            e.preventDefault();
-            if (e.keyCode === 13)
-                document.getElementById("submit").click();
-        });
-    </script>
-
-    <script>
-        $("#submit").click((e) => {
-            const key = $("#form_key").val();
-            const value = $("#form_value").val();
-            if(key !== '' && value !== '')  {
-                $.ajax(`metrics/${key}`, {
-                    'data': JSON.stringify([{ "timestamp": Date.now(), "value": value }]),
-                    'type': 'POST',
-                    'contentType': 'application/json',
-                    'success' : function() {
-                        $("#saved-metric").html('<div class="alert alert-success alert-dismissible" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Metric saved</div>');
-                    }
-                });
-            }
-            else {
-                $("#saved-metric").html('<div class="alert alert-danger alert-dismissible" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Please fill all fields</div>');
-            }
-        });
-    </script>
-
 </html>

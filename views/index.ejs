@@ -4,13 +4,16 @@
   <head>
     <title>Index</title>
     <% include partials/head %>
+    <script src="/d3.min.js"></script>
+    <link rel="stylesheet" href="/css/chart.css">
+
   </head>
 
   <body class="container">
     <div class="col-md-6.col-md-offset-3">
       <section>
         <h1>Hello <%= name %></h1>
-        <p><em>Retreive your metrics by key, or all your metrics whithout specifing their key.</em></p>
+        <!--<p><em>Retreive your metrics by key, or all your metrics whithout specifing their key.</em></p>
         <form>
           <div class="form-group">
             <input type="text" id="metric-key" placeholder="Key"/>
@@ -18,7 +21,7 @@
           <div class="form-group">
             <button type="submit" class="btn btn-success" id="show-metrics">Show metrics</button>
           </div>
-        </form>
+        </form>-->
       </section>
       <section id="metrics"></section>
       <hr/>
@@ -27,35 +30,120 @@
         <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>Logout</button>
       </section>
     </div>
-  </body>
 
-  <script>
-    $('#show-metrics').click((e) => {
-      e.preventDefault();
-      const key = $('#metric-key').val();
-      if(key === '') {
-        $.getJSON('/metrics', {}, (data) => {
-          let html = '';
-          for(let k in data) {
-            const content = data[k].map(d => {
-              return `<p>key: ${k}, timestamp: ${d.timestamp}, value: ${d.value}</p>`;
-            });
-            html += content.join("");
-          }
-            $("#metrics").html(html!=='' ? html : "No metric found");
 
-        });
-      }
-      else {
-        $.getJSON(`/metrics/${key}`, {}, (data) => {
-          const content = data.map(d => {
-            return `<p>timestamp: ${d.timestamp}, value: ${d.value}</p>`;
+
+
+
+    <script>
+      // load the data
+      $.getJSON('/metrics/2', function(data) { 
+        data.forEach(element => {
+          element.timestamp = new Date(parseInt(element.timestamp)).toLocaleString();
+         });
+
+        const maxMetricValue = d3.max(data, function(d) { return d.value; });
+
+        // set the dimensions of the canvas
+        const padding = {top: 30, right: 30, bottom: 80, left: 30},
+            width = $('#metrics').width() - padding.left - padding.right,
+            height = $(document).height()/2 - padding.top - padding.bottom;
+    
+        // set the ranges
+        const x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+        const y = d3.scale.linear().range([height, 0]);
+    
+        // define the axis
+        const xAxis = d3.svg.axis()
+            .scale(x)
+            .orient('bottom')
+            const yAxis = d3.svg.axis()
+            .scale(y)
+            .orient('left')
+            .ticks(maxMetricValue/1);
+    
+        // add the SVG element
+        const svg = d3.select('#metrics')
+          .append('svg')
+            .attr('width', width + padding.left + padding.right)
+            .attr('height', height + padding.top + padding.bottom)
+          .append('g')
+            .attr('transform', `translate(${padding.left}, ${padding.top})`);
+
+          // scale the range of the data
+          x.domain(data.map(function(d) { return d.timestamp; }));
+          y.domain([0, maxMetricValue]);
+      
+        // add axis
+        svg.append('g')
+            .attr('class', 'x axis')
+            .attr('transform', `translate(0, ${height})`)
+            .call(xAxis)
+          .selectAll('text')
+            .style('text-anchor', 'end')
+            .attr('dx', '-.75em')
+            .attr('dy', '-.25em') 
+            .attr('transform', 'rotate(-90)');
+      
+        svg.append('g')
+            .attr('class', 'y axis')
+            .call(yAxis)
+          //.append('text')
+            //.attr('transform', 'rotate(-90)')
+            //.attr('y', 50)
+            //.attr('dy', '.71em')
+            //.style('text-anchor', 'end')
+            //.text('');
+      
+      
+        // Add bar chart
+        svg.selectAll('bar')
+            .data(data)
+          .enter().append('rect')
+            .attr('class', 'bar')
+            .attr('x', function(d) { return x(d.timestamp); })
+            .attr('width', x.rangeBand())
+            .attr('y', function(d) { return y(d.value); })
+            .attr('height', function(d) { return height - y(d.value); });
+      });
+    </script>
+
+
+
+
+
+
+
+
+
+    <script>
+      $('#show-metrics').click((e) => {
+        e.preventDefault();
+        const key = $('#metric-key').val();
+        if(key === '') {
+          $.getJSON('/metrics', {}, (data) => {
+            let html = '';
+            for(let k in data) {
+              const content = data[k].map(d => {
+                return `<p>key: ${k}, timestamp: ${d.timestamp}, value: ${d.value}</p>`;
+              });
+              html += content.join("");
+            }
+              $("#metrics").html(html!=='' ? html : "No metric found");
+
           });
-          let html = content.join("")
-          $("#metrics").html(html!=='' ? html : `No metric found with key=${key}`);
-        });
-      }
-    });
-  </script>
+        }
+        else {
+          $.getJSON(`/metrics/${key}`, {}, (data) => {
+            const content = data.map(d => {
+              return `<p>timestamp: ${d.timestamp}, value: ${d.value}</p>`;
+            });
+            let html = content.join("")
+            $("#metrics").html(html!=='' ? html : `No metric found with key=${key}`);
+          });
+        }
+      });
+    </script>
 
+  </body>
 </html>

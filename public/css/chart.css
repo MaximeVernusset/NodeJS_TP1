@@ -1,0 +1,17 @@
+.bar {
+    fill: rgb(33, 138, 33);
+}
+
+.bar:hover {
+    fill: rgb(153, 255, 0);
+}
+
+.x {
+    font-size: .75em;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+}

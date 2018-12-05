@@ -36,6 +36,10 @@ app.set('view engine', 'ejs');
 app.use('/', express.static(path.join(__dirname, '/../node_modules/jquery/dist')));
 //JQuery
 app.use('/', express.static(path.join(__dirname, '/../node_modules/bootstrap/dist')));
+//D3
+app.use('/', express.static(path.join(__dirname, '/../node_modules/d3')));
+//CSS & JS
+app.use('/', express.static(path.join(__dirname, '/../public')));
 
 /*
   Authentification
@@ -125,7 +129,8 @@ userRouter.post('/', function (req: any, res: any, next: any) {
         else {
           req.session.loggedIn = true;
           req.session.user = newUser;
-          res.status(201).send(`User ${req.body.username} persisted`);
+          //res.status(201).send(`User ${req.body.username} persisted`);
+          res.redirect('/');
         }
       });
     }
