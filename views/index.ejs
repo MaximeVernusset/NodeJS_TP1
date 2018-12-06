@@ -17,7 +17,7 @@
         <div class="form-group">
           <label for="metricsGroupIDs">Metric group ID:</label>
           <select id="metricsGroupIDs" class="form-control" onchange="if(this.value != '') makeChart(this.value)">
-            <option selected disabled></option>
+            <option selected></option>
           </select>
         </div>
       </section>
@@ -40,6 +40,11 @@
       //Reconstruit le graphe en cas de redimensionnement de la fenêtre
       $(window).resize(function() {
         $('#metricsGroupIDs').change();
+      });
+
+      $('#metricsGroupIDs').change(function() {
+        if($(this).val() === '')
+        $('#metrics').html('');
       });
 
 
