@@ -191,7 +191,7 @@ metricsRouter.delete('/:id', (req, res, next) => {
         res.status(200).send();
     });
 });
-app.get('/newMetric', (req, res, next) => {
+app.get('/newMetric', authMiddleware, (req, res, next) => {
     res.render('newMetric');
 });
 app.use('/metrics', authMiddleware, metricsRouter);
