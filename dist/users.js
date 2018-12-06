@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = require('bcrypt');
+const saltRounds = 10;
 class User {
     constructor(username, email, password, passwordHashed = false) {
         this.password = "";
-        this.saltRounds = 10;
         this.username = username;
         this.email = email;
         if (!passwordHashed)
@@ -13,7 +13,7 @@ class User {
             this.password = password;
     }
     setPassword(toSet) {
-        this.password = bcrypt.hashSync(toSet, this.saltRounds);
+        this.password = bcrypt.hashSync(toSet, saltRounds);
     }
     getPassword() {
         return this.password;
@@ -40,6 +40,7 @@ class UserHandler {
                 callback(null, User.fromDb(username, data));
         });
     }
+    /*Récupère tous les utilisateurs */
     getAll(callback) {
         const stream = this.db.createReadStream();
         var users = [];

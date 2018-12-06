@@ -30,14 +30,23 @@ app.set('view engine', 'ejs');
 app.use('/', express.static(path.join(__dirname, '/../node_modules/jquery/dist')));
 //JQuery
 app.use('/', express.static(path.join(__dirname, '/../node_modules/bootstrap/dist')));
+//D3
+app.use('/', express.static(path.join(__dirname, '/../node_modules/d3')));
+//CSS & JS
+app.use('/', express.static(path.join(__dirname, '/../public')));
 /*
   Authentification
 */
 const authRouter = express.Router();
-var wrongCredentials = false;
+var wrongCredentials = false; //Permet d'afficher un message d'avertissement en cas mauvais identifiants
 authRouter.get('/login', function (req, res) {
-    res.render('login', { message: wrongCredentials ? 'Username or password is not valid' : '' });
-    wrongCredentials = false;
+    if (req.session.loggedIn) {
+        res.redirect('/');
+    }
+    else {
+        res.render('login', { message: wrongCredentials ? 'Username or password is not valid' : '' });
+        wrongCredentials = false;
+    }
 });
 authRouter.post('/login', function (req, res, next) {
     dbUser.get(req.body.username, function (err, result) {
@@ -104,7 +113,7 @@ userRouter.post('/', function (req, res, next) {
                 else {
                     req.session.loggedIn = true;
                     req.session.user = newUser;
-                    res.status(201).send(`User ${req.body.username} persisted`);
+                    res.redirect('/');
                 }
             });
         }
