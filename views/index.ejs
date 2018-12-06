@@ -16,15 +16,15 @@
         <hr/>
         <div class="form-group">
           <label for="metricsGroupIDs">Metric group ID:</label>
-          <select id="metricsGroupIDs" class="form-control" onchange="if(this.value != '') makeChart(this)">
+          <select id="metricsGroupIDs" class="form-control" onchange="if(this.value != '') makeChart(this.value)">
             <option selected disabled></option>
           </select>
-      </div>
+        </div>
       </section>
       <section id="metrics"></section>
       <hr/>
       <section>
-        <button class="btn btn-default" href="/newMetric" onClick='document.location.href="/newMetric"'>Add a new metric</button>
+        <button class="btn btn-success" href="/newMetric" onClick='document.location.href="/newMetric"'>Add a new metric</button>
         <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>Logout</button>
       </section>
     </div>
@@ -37,21 +37,22 @@
         }
       });
 
+      //Re-dessine le graphe en cas de redimensionnement de la fenêtre
       $(window).resize(function() {
         $('#metricsGroupIDs').change();
       })
 
 
-      function makeChart(comboBox) {
+      function makeChart(metricGroupID) {
         // load the data
-        $.getJSON(`/metrics/${comboBox.value}`, function(data) { 
+        $.getJSON(`/metrics/${metricGroupID}`, function(data) { 
           const maxMetricValue = d3.max(data, function(d) { return d.value; });
           data.forEach(element => {
             element.timestamp = new Date(parseInt(element.timestamp)).toLocaleString();
           });
 
           // set the dimensions of the canvas
-          const padding = {top: 30, right: 30, bottom: 110, left: 30},
+          const padding = {top: 30, right: 0, bottom: 110, left: 40},
               width = $('#metrics').width() - padding.left - padding.right,
               height = $(document).height()/1.75 - padding.top - padding.bottom;
       
@@ -95,13 +96,7 @@
         
           svg.append('g')
               .attr('class', 'y axis')
-              .call(yAxis)
-            //.append('text')
-              //.attr('transform', 'rotate(-90)')
-              //.attr('y', 50)
-              //.attr('dy', '.71em')
-              //.style('text-anchor', 'end')
-              //.text('');
+              .call(yAxis);
         
           // Add bar chart
           svg.selectAll('bar')
@@ -112,6 +107,20 @@
               .attr('width', x.rangeBand())
               .attr('y', function(d) { return y(d.value); })
               .attr('height', function(d) { return height - y(d.value); });
+
+
+          $('#metrics').append(`<button class="btn btn-warning" value="${metricGroupID}" onclick="deleteMetricGroup(this.value)">Delete metric group ${metricGroupID}</button>`);
+        });
+      }
+
+      function deleteMetricGroup(metricGroupID) {
+        $.ajax({
+          url: `/metrics/${metricGroupID}`,
+          type: 'DELETE',
+          success: function(result) {
+            $('#metrics').html('');
+            $("#metricsGroupIDs > option:selected").remove();
+          }
         });
       }
     </script>

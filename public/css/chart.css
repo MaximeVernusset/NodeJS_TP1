@@ -1,9 +1,9 @@
 .bar {
-    fill: rgb(33, 138, 33);
+    fill: rgb(128, 0, 128);
 }
 
 .bar:hover {
-    fill: rgb(153, 255, 0);
+    fill: rgb(138, 0, 138);
 }
 
 .x {
