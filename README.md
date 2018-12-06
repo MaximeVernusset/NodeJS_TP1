@@ -25,7 +25,7 @@ npm run dev
 ## Routes
 ### Frontend
 * ``GET`` :
-    - ``/`` index (retrieve metrics). Redirige vers ``/login`` si non authentifié.
+    - ``/`` index (affichage des métriques en graphe). Redirige vers ``/login`` si non authentifié.
     - ``/login`` formulaire de connexion. Redirige vers ``/`` si déjà authentifié.
     - ``/signup`` formulaire de création de compte.
     - ``/newMetric`` formulaire d'ajout de métrique.
@@ -37,11 +37,11 @@ npm run dev
     - ``/users`` retourne tous les utilisateurs.
     - ``/user/{username}`` displays username info.
 * ``POST`` :
-    - ``/login`` authentifie l'utilisateur. Redirige vers ``/`` si l'authntification a réussi, vers ``/login`` sinon.
+    - ``/login`` authentifie l'utilisateur. Redirige vers ``/`` si l'authentification a réussi, vers ``/login`` sinon.
     - ``/user`` créer un utilisateur.
     - ``/metrics/{key}`` enregistre un tableau de métriques associées avec l'ID de groupe voulu, associé à l'utilisateur connecté.
 * ``DELETE`` :
-    - ``/metrics/{key}`` supprime le groupe de métriques de l'utilisateur associé à l'ID donné.
+    - ``/metrics/{key}`` supprime le groupe de métriques de l'utilisateur, associé à l'ID donné.
     - ``/user/{username}`` supprime un utilisateur.
 
 ## Test
