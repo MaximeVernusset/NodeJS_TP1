@@ -25,24 +25,24 @@ npm run dev
 ## Routes
 ### Frontend
 * ``GET`` :
-    - ``/`` index (retrieve metrics). Redirects to ``/login`` if not authenticated
-    - ``/login`` login form
-    - ``/signup`` create account form
-    - ``/newMetric`` create a new metric form
-    - ``/logout`` logout connected user. Redirects to ``/login``
-### API
+    - ``/`` index (retrieve metrics). Redirige vers ``/login`` si non authentifié.
+    - ``/login`` formulaire de connexion. Redirige vers ``/`` si déjà authentifié.
+    - ``/signup`` formulaire de création de compte.
+    - ``/newMetric`` formulaire d'ajout de métrique.
+    - ``/logout`` Déconnecte l'utilisateur puis redirige vers ``/login``.
+### API (REST)
 * ``GET`` :
-    - ``/metrics`` displays all connected user's metrics from database
-    - ``/metrics/{key}`` displays connected user's metrics associated to desired key
-    - ``/users`` displays all existing users
-    - ``/user/{username}`` displays username info
+    - ``/metrics`` retourne toutes les métriques de l'utilisateur connecté.
+    - ``/metrics/{key}`` retourne le groupe de métriques de l'utilisateur, associé à l'ID demandé.
+    - ``/users`` retourne tous les utilisateurs.
+    - ``/user/{username}`` displays username info.
 * ``POST`` :
-    - ``/login`` authenticate user
-    - ``/user`` create user
-    - ``/metrics/{key}`` save metrics to desired key, associated whith connected user
+    - ``/login`` authentifie l'utilisateur. Redirige vers ``/`` si l'authntification a réussi, vers ``/login`` sinon.
+    - ``/user`` créer un utilisateur.
+    - ``/metrics/{key}`` enregistre un tableau de métriques associées avec l'ID de groupe voulu, associé à l'utilisateur connecté.
 * ``DELETE`` :
-    - ``/metrics/{key}`` delete connected user's metrics with desired key
-    - ``/user/{username}`` delete user 
+    - ``/metrics/{key}`` supprime le groupe de métriques de l'utilisateur associé à l'ID donné.
+    - ``/user/{username}`` supprime un utilisateur.
 
 ## Test
 Test unitaires : [Mocha](https://mochajs.org/) et [Chai](https://www.chaijs.com/).
