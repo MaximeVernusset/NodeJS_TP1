@@ -31,21 +31,25 @@
 
 
     <script>
+      //Insère les id de métriques dans la combobox
       $.getJSON('/metrics', function(data) {
-        for(let key in data) {
+        for(let key in data)
           $('#metricsGroupIDs').append(`<option>${key}</option>`);
-        }
       });
 
-      //Re-dessine le graphe en cas de redimensionnement de la fenêtre
+      //Reconstruit le graphe en cas de redimensionnement de la fenêtre
       $(window).resize(function() {
         $('#metricsGroupIDs').change();
-      })
+      });
 
 
+      /**
+       * Récupère les métriques et construit le graphe
+       * Adapté de cet exemple : http://bl.ocks.org/Jverma/887877fc5c2c2d99be10?fbclid=IwAR0aoPOYou6f0Xi6vKijmSMrW2zS0ZThGjkh0jGsPE3up-kKAXUzCARtIzA
+       */
       function makeChart(metricGroupID) {
         // load the data
-        $.getJSON(`/metrics/${metricGroupID}`, function(data) { 
+        $.getJSON(`/metrics/${metricGroupID}`, function(data) {
           const maxMetricValue = d3.max(data, function(d) { return d.value; });
           data.forEach(element => {
             element.timestamp = new Date(parseInt(element.timestamp)).toLocaleString();
@@ -108,8 +112,8 @@
               .attr('y', function(d) { return y(d.value); })
               .attr('height', function(d) { return height - y(d.value); });
 
-
-          $('#metrics').append(`<button class="btn btn-warning" value="${metricGroupID}" onclick="deleteMetricGroup(this.value)">Delete metric group ${metricGroupID}</button>`);
+          //Bouton de suppression
+          $('#metrics').append(`<button class="btn btn-warning" value="${metricGroupID}" onclick="deleteMetricGroup(this.value)">Delete metric group "${metricGroupID}"</button>`);
         });
       }
 

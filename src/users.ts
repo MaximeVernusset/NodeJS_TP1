@@ -52,6 +52,7 @@ export class UserHandler {
     });
   }
 
+  /*Récupère tous les utilisateurs */
   public getAll(callback: (err: Error | null, result?: {}) => void) {
     const stream = this.db.createReadStream();
     var users: User[] = [];
@@ -66,7 +67,7 @@ export class UserHandler {
         users.push(User.fromDb(username, data.value));
       }
     });
-}
+  }
 
   public save(user: User, callback: (err: Error | null) => void) {
     this.db.put(`${this.keyPrefix}:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {

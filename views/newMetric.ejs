@@ -21,6 +21,7 @@
         </section>
         <hr/>
         <section id="saved-metric"></section>
+        <section id="error-message"></section>
         <section>
             <button class="btn btn-default" href="/" onClick='document.location.href="/"'>Retrieve metrics</button>
             <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>Logout</button>
@@ -28,6 +29,7 @@
 
 
         <script>
+            //Simuler un formulaire abec validation en appuyant sur entrée
             var input = document.getElementById("form_value");
             input.addEventListener("keyup", function(e) {
                 e.preventDefault();
@@ -37,21 +39,24 @@
         </script>
     
         <script>
+            //Valide les entrées et poste les données
             $("#submit").click((e) => {
                 const key = $("#form_key").val();
                 const value = parseInt($("#form_value").val());
-                if(key !== '' && value !== '')  {
+                const timestamp = Date.now();
+                if(key !== '' && value !== '' && typeof value == 'number')  {
                     $.ajax(`metrics/${key}`, {
-                        'data': JSON.stringify([{ "timestamp": Date.now(), "value": value }]),
+                        'data': JSON.stringify([{ "timestamp": timestamp, "value": value }]),
                         'type': 'POST',
                         'contentType': 'application/json',
                         'success' : function() {
-                            $("#saved-metric").html('<div class="alert alert-success alert-dismissible" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Metric saved</div>');
+                            $("#error-message").html('');
+                            $("#saved-metric").append(`<div class="alert alert-success alert-dismissible" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Metric <strong>${value}</strong> saved on <strong>${new Date(timestamp).toLocaleString()}</strong> for group <strong>${key}</strong>.</div>`);
                         }
                     });
                 }
                 else {
-                    $("#saved-metric").html('<div class="alert alert-danger alert-dismissible" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Please fill all fields</div>');
+                    $("#error-message").html('<div class="alert alert-danger alert-dismissible" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Please fill all fields</div>');
                 }
             });
         </script>

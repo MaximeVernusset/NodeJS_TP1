@@ -41,12 +41,13 @@ app.use('/', express.static(path.join(__dirname, '/../node_modules/d3')));
 //CSS & JS
 app.use('/', express.static(path.join(__dirname, '/../public')));
 
+
 /*
   Authentification
 */
 
 const authRouter = express.Router();
-var wrongCredentials: boolean = false;
+var wrongCredentials: boolean = false; //Permet d'afficher un message d'avertissement en cas mauvais identifiants
 
 authRouter.get('/login', function (req: any, res: any) {
   if(req.session.loggedIn) {
@@ -134,7 +135,6 @@ userRouter.post('/', function (req: any, res: any, next: any) {
         else {
           req.session.loggedIn = true;
           req.session.user = newUser;
-          //res.status(201).send(`User ${req.body.username} persisted`);
           res.redirect('/');
         }
       });
